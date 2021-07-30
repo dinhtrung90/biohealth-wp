@@ -1222,6 +1222,11 @@
   resolved "https://registry.yarnpkg.com/@coreui/coreui/-/coreui-4.0.0.tgz#52ebe0197411a829ba48057ade61923e05859eec"
   integrity sha512-8vH6fJrmvCR/Oy5v0E+/1AL3Ygb4jhQ7NXK2fMYWJyK13BePDm9muB3y6S0IdqkpBwjY3hHVwHyt2lJqJdesmQ==
 
+"@coreui/coreui@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@coreui/coreui/-/coreui-4.0.1.tgz#e5faf540aeea31b0cc8d428d73080a364e4bc6fd"
+  integrity sha512-1mrWnbqoWb7+8ZAMUdlWt0AqVzDEkJglk7F3OaFsQtxienezFvlMNsd1YPPNo+taRzF7HZ8xSDIAItCvlOaMVg==
+
 "@coreui/icons-react@^2.0.0-rc.0":
   version "2.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/@coreui/icons-react/-/icons-react-2.0.0-rc.0.tgz#5eb4d082a9306c6a2126c61766dcfec503a8a4e1"
@@ -1247,10 +1252,10 @@
     "@coreui/chartjs" "^3.0.0"
     chart.js "^3.4.1"
 
-"@coreui/react@4.0.0-beta.2":
-  version "4.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@coreui/react/-/react-4.0.0-beta.2.tgz#f9f319f170d35e21bf65e4e08bf3d81cbfc51ec0"
-  integrity sha512-7rJGcL8s06AD/OUx78DnUB6q7oSjOk2JKAqtGLF3Lkd+Zf0YqVkk8dcrK6j8SG+mPURhbZSPcz5zpE1yf645hg==
+"@coreui/react@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@coreui/react/-/react-4.0.0-beta.3.tgz#f765158ab2197d8f50dcdf47dd80c209d3fdafcc"
+  integrity sha512-LXtQao2S0iKxfur26GCzuHmQ6VwXCW6RS1TWYT9BV8twRU3HvuRsrmAaEYgqtAyW3QsPGZprDO545+FCNTDeUw==
 
 "@coreui/utils@^1.3.1":
   version "1.3.1"
@@ -2635,6 +2640,13 @@ axe-core@^4.0.2:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.2.3.tgz#2a3afc332f0031b42f602f4a3de03c211ca98f72"
   integrity sha512-pXnVMfJKSIWU2Ml4JHP7pZEPIrgBO1Fd3WGx+fPBsS+KRGhE4vxooD8XBGWbQOIVSZsVK7pUDBBkCicNu80yzQ==
+
+axios@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
+  dependencies:
+    follow-redirects "^1.10.0"
 
 axobject-query@^2.2.0:
   version "2.2.0"
@@ -5239,7 +5251,7 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
 
-follow-redirects@^1.0.0:
+follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
   integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
