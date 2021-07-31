@@ -1,0 +1,145 @@
+{
+  "common": {
+    "All": "Tất cả",
+    "Action": "Hoạt động",
+    "Create": "Tạo mới",
+    "Close": "Close",
+    "Update": "Chỉnh sửa",
+    "Delete": "Xoá",
+    "Read": "Đọc",
+    "CreatedDate": "Ngày tạo",
+    "Description": "Mô tả",
+    "Permission": "Danh sách phân quyền",
+    "Save": "Lưu",
+    "ConfirmDelete": "Xoá Dữ Diệu",
+    "Cancel": "Huỷ",
+    "NewUser": "Tạo mới thông tin",
+    "EditUser": "Thay đổi thông tin",
+    "MobileNumber": "Di động",
+    "Edit": "Sửa",
+    "ResendVerifyEmail": "Xác thực Email",
+    "ResetPassword": "Đặt lại mật khẩu",
+    "Terminate": "Đóng tài khoản",
+    "Profile": "Thông tin cá nhân",
+    "AddressBook": "Sổ địa chỉ",
+    "RoleMapping": "Phân quyền ứng dụng",
+    "AddSelected": "Chọn quyền",
+    "RemoveSelected": "Từ chối quyền",
+    "MobilePhone": "Số điện thoại",
+    "Login": "Đăng nhập",
+    "Password": "Mật khẩu",
+    "ForgotPassword": "Quên mật khẩu"
+  },
+  "theHeader": {
+    "Dashboard": "Trang chủ",
+    "Employee": "Quản lý Nhân Viên",
+    "Settings": "Cài đặt"
+  },
+  "theSidebar": {
+    "title": "Elend Center",
+    "Dashboard": "Trang chủ",
+    "Organizations": "Doanh Nghiệp",
+    "Employee": "Quản lý Nhân Viên",
+    "Customer": "Quản lý Khách hàng",
+    "UserRole": "Phân Quyền "
+  },
+  "view": {
+    "Organizations": {
+      "title": "Doanh Nghiệp"
+    },
+    "Users": {
+      "title": {
+        "Employee": "Quản lý Nhân Viên",
+        "Customers": "Quản lý Khách hàng"
+      },
+      "fields": {
+        "PersonInfo": "Tên nhân viên",
+        "CustomerInfo": "Tên khách hàng",
+        "Username": "Tên đăng nhập",
+        "Registered": "Ngày đăng ký",
+        "Role": "Phân quyền",
+        "Status": "Trạng thái",
+        "EmailVerified": "Xác nhận email"
+      }
+    },
+    "User": {
+      "Username": "Tên đăng nhập",
+      "Password": "Password",
+      "PasswordConfirmation": "Password Confirmation",
+      "Temporary": "Temporary",
+      "UserRole": "Phân quyền",
+      "Gender": "Giới tính",
+      "GenderType": {
+        "Male": "Nam",
+        "Female": "Nữ",
+        "Unknown": "Giói tính khác"
+      },
+      "EmailAddress": "Địa chỉ email",
+      "FirstName": "Tên",
+      "LastName": "Họ",
+      "MobileNumber": "Đi động",
+      "DateOfBirth": "Ngày sinh",
+      "Status": "Trạng thái",
+      "StatusType": {
+        "Active": "Đang hoạt động",
+        "Inactive": "Không hoạt động",
+        "Pending": "Chờ kích hoạt",
+        "Banned": "Tình trạng bị cầm"
+      },
+      "AddressLine1": "Địa chỉ nhà",
+      "AddressLine2": "Tỉnh (Huyện)",
+      "AreaOrCity": "Thành phố",
+      "Country": "Quốc gia",
+      "PostalZipCode": "Mã bưu điện",
+      "AddressBook": "Sổ địa chỉ",
+      "AddNewAddress": "Thêm mới địa chỉ",
+      "SaveAddress": "Save Address",
+      "ApplicationRoles": "Application Roles"
+    },
+    "UserRoles": {
+      "title": "Phân Quyền",
+      "NewUserRole": "Tạo Mới Phân Quyền",
+      "EditUserRole": "Cập Nhật Phân Quyền",
+      "UserRoleName": "Tên phân quyền"
+    },
+    "UserRole": {
+      "Create": "Tạo Mới",
+      "Update": "Chỉnh Sửa",
+      "Delete": "Xoá",
+      "Read": "Xem",
+      "CompositeRoles": "Composite Roles",
+      "AvailableRoles": "Available Roles",
+      "AssignedRoles": "Assigned Roles",
+      "AssociatedRoles": "Associated Roles",
+      "EffectiveRoles": "Effective Roles",
+      "UserRoles": "User Roles"
+    },
+    "Eligibilities": {
+      "Company": "Company",
+      "Fullname": "Fullname",
+      "SSN": "CMND/CCCD",
+      "Phone": "Phone"
+    }
+  },
+  "messages": {
+    "messagePleaseSelect": "Vui lòng chọn",
+    "messageConfirmDelete": "Bạn có chăc muốn xoá?",
+    "messageConfirmDeleteAddress": "Bạn có chăc muốn xoá địa chỉ này?",
+    "requireRoleName": "Yêu cầu nhập tên phân quyền!",
+    "requireRoleDescription": "Yêu cầu nhập chi tiết!",
+    "validations": {
+      "emailInvalid": "Email không hợp lệ",
+      "emailRequired": "Vui lòng nhập địa chỉ Email",
+      "roleRequired": "Vui lòng chọn quyền người dùng",
+      "genderRequired": "Vui lòng chọn giới tính",
+      "firstNameRequired": "Vui lòng nhập tên",
+      "lastNameRequired": "Vui lòng nhập họ",
+      "passwordRequired": "Vui lòng nhập mật khẩu",
+      "passwordStrongRequired": "Phải chứa 8 ký tự, một chữ hoa, một chữ thường, một số và một ký tự trường hợp đặc biệt",
+      "confirmPasswordRequired": "Vui lòng nhập xác nhận mật khẩu",
+      "confirmPasswordNotMatch": "Mật khẩu phải trùng khớp"
+    },
+    "resendVerifyEmailSuccess": "Xác thực địa chỉ Email đã được gửi đến hộp thư ",
+    "resetPasswordSuccess": "Đặt lại mật khẩu thành công."
+  }
+}

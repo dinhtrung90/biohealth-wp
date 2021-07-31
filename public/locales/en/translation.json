@@ -1,0 +1,145 @@
+{
+  "common": {
+    "All": "All",
+    "Action": "Action",
+    "Create": "Create",
+    "Close": "Close",
+    "Update": "Update",
+    "Delete": "Delete",
+    "Read": "Read",
+    "CreatedDate": "Created Date",
+    "Description": "Description",
+    "Permission": "Permission",
+    "Save": "Save",
+    "ConfirmDelete": "Confirm Delete",
+    "Cancel": "Cancel",
+    "NewUser": "New User",
+    "EditUser": "Edit User",
+    "MobileNumber": "Mobile Number",
+    "Edit": "Edit",
+    "ResendVerifyEmail": "Resend Verify Email",
+    "ResetPassword": "Reset Password",
+    "Terminate": "Terminate",
+    "Profile": "Profile",
+    "AddressBook": "Address Book",
+    "RoleMapping": "Role Mappings",
+    "AddSelected": "Add Selected",
+    "RemoveSelected": "Remove Selected",
+    "MobilePhone": "MobilePhone",
+    "Login": "Login",
+    "Password": "Password",
+    "ForgotPassword": "Forgot password"
+  },
+  "theHeader": {
+    "Dashboard": "Dashboard",
+    "Employee": "Employee",
+    "Settings": "Settings"
+  },
+  "theSidebar": {
+    "title": "Elend Center",
+    "Dashboard": "Dashboard",
+    "Organizations": "Organizations",
+    "Employee": "Employee",
+    "Customer": "Customer",
+    "UserRole": "User Role"
+  },
+  "view": {
+    "Organizations": {
+      "title": "Organizations"
+    },
+    "Users": {
+      "title": {
+        "Employee": "Employee",
+        "Customers": "Customers"
+      },
+      "fields": {
+        "PersonInfo": "Person Info",
+        "CustomerInfo": "Person Info",
+        "Username": "Username",
+        "Registered": "Registered",
+        "Role": "Role",
+        "Status": "Status",
+        "EmailVerified": "Email Verified"
+      }
+    },
+    "User": {
+      "Username": "Username",
+      "Password": "Password",
+      "PasswordConfirmation": "Password Confirmation",
+      "Temporary": "Temporary",
+      "UserRole": "User Role",
+      "Gender": "Gender",
+      "GenderType": {
+        "Male": "Male",
+        "Female": "Female",
+        "Unknown": "Unknown"
+      },
+      "EmailAddress": "Email Address",
+      "FirstName": "First Name",
+      "LastName": "LastName",
+      "MobileNumber": "Mobile Number",
+      "DateOfBirth": "Date of Birth",
+      "Status": "Status",
+      "StatusType": {
+        "Active": "Active",
+        "Inactive": "Inactive",
+        "Pending": "Pending",
+        "Banned": "Banned"
+      },
+      "AddressLine1": "Address Line 1",
+      "AddressLine2": "Address Line 2",
+      "AreaOrCity": "Area or City",
+      "Country": "Country",
+      "PostalZipCode": "Postal/ZIP Code",
+      "AddressBook": "Address Book",
+      "AddNewAddress": "Add New Address",
+      "SaveAddress": "Save Address",
+      "ApplicationRoles": "Application Roles"
+    },
+    "UserRoles": {
+      "title": "User Roles",
+      "NewUserRole": "New User Role",
+      "EditUserRole": "Edit User Role",
+      "UserRoleName": "User Role Name"
+    },
+    "UserRole": {
+      "Create": "Create",
+      "Update": "Update",
+      "Delete": "Delete",
+      "Read": "Read",
+      "CompositeRoles": "Composite Roles",
+      "AvailableRoles": "Available Roles",
+      "AssignedRoles": "Assigned Roles",
+      "AssociatedRoles": "Associated Roles",
+      "EffectiveRoles": "Effective Roles",
+      "UserRoles": "User Roles"
+    },
+    "Eligibilities": {
+      "Company": "Company",
+      "Fullname": "Fullname",
+      "SSN": "SSN",
+      "Phone": "Phone"
+    }
+  },
+  "messages": {
+    "messagePleaseSelect": "Please select",
+    "messageConfirmDelete": "Are you sure you want to delete?",
+    "messageConfirmDeleteAddress": "Are you sure you want to delete this address?",
+    "requireRoleName": "Please input the role name!",
+    "requireRoleDescription": "Please input the description!",
+    "validations": {
+      "emailInvalid": "Email is invalid",
+      "emailRequired": "Email is required",
+      "roleRequired": "Role is required",
+      "genderRequired": "Gender is required",
+      "firstNameRequired": "First Name is required",
+      "lastNameRequired": "Last Name is required",
+      "passwordRequired": "Password is required",
+      "passwordStrongRequired": "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character",
+      "confirmPasswordRequired": "Confirm Password is required",
+      "confirmPasswordNotMatch": "Passwords must match"
+    },
+    "resendVerifyEmailSuccess": "A verification link has been sent to the email account ",
+    "resetPasswordSuccess": "Password reset successfully."
+  }
+}

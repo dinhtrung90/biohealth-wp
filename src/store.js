@@ -1,17 +1,19 @@
-import { createStore } from 'redux'
+import rootReducer from './reducers'
+import { createStore, applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
+import { createLogger } from 'redux-logger'
+import { loadingBarMiddleware } from 'react-redux-loading-bar'
 
-const initialState = {
-  sidebarShow: false,
-}
+const loggerMiddleware = createLogger()
 
-const changeState = (state = initialState, { type, ...rest }) => {
-  switch (type) {
-    case 'set':
-      return { ...state, ...rest }
-    default:
-      return state
-  }
-}
-
-const store = createStore(changeState)
+const store = createStore(
+  rootReducer,
+  applyMiddleware(
+    thunkMiddleware,
+    loggerMiddleware,
+    loadingBarMiddleware({
+      scope: 'sectionBar',
+    }),
+  ),
+)
 export default store
