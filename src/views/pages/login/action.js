@@ -7,7 +7,7 @@ function login(data) {
     dispatch(request())
     return api.authService
       .login(data)
-      .then(dispatch(success(data)))
+      .then((response) => dispatch(success(response.data)))
       .catch((error) => {
         dispatch(failure(error))
       })

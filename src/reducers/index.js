@@ -8,7 +8,7 @@ const rootReducer = combineReducers({
   changeState: changeStateReducer,
   loadingBar: loadingBarReducer,
   alert,
-  loginReducer,
+  login: loginReducer,
 })
 
 export default rootReducer

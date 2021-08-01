@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -26,6 +26,8 @@ import { FaLock, FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
 const Login = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const history = useHistory()
+  const isAuthenticated = useSelector((state) => state.login.isAuthenticated)
   const [isRevealPwd, setIsRevealPwd] = useState(false)
 
   const schema = Yup.object({
@@ -45,7 +47,11 @@ const Login = (props) => {
 
   const handleLoginSubmit = (values) => {
     console.log('handleSubmit=', values)
-    dispatch(loginActions.login(values))
+    dispatch(loginActions.login(values)).then((result) => {
+      if (isAuthenticated) {
+        history.push('/')
+      }
+    })
   }
 
   return (

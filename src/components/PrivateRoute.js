@@ -6,6 +6,16 @@ import { APP_TOKEN } from 'src/constants/constants'
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const token = localStorage.getItem(APP_TOKEN)
 
+  if (!token) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/login',
+        }}
+      />
+    )
+  }
+
   const renderRedirect = (props) => {
     let defaultUrl = '/login'
     if (token && token.length > 0) {
