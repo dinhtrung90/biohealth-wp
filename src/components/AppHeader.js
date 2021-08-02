@@ -22,7 +22,7 @@ const AppHeader = () => {
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
   return (
-    <CHeader position="sticky" className="mb-4">
+    <CHeader position="sticky">
       <CContainer fluid>
         <CHeaderToggler
           className="ms-md-3 d-lg-none"
@@ -34,43 +34,43 @@ const AppHeader = () => {
           <CIcon name="logo" height="48" alt="Logo" />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
-          <CNavItem>
-            <CNavLink to="/dashboard" component={NavLink} activeClassName="active">
-              Dashboard
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
-          </CNavItem>
+          {/*<CNavItem>*/}
+          {/*  <CNavLink to="/dashboard" component={NavLink} activeClassName="active">*/}
+          {/*    Dashboard*/}
+          {/*  </CNavLink>*/}
+          {/*</CNavItem>*/}
+          {/*<CNavItem>*/}
+          {/*  <CNavLink href="#">Users</CNavLink>*/}
+          {/*</CNavItem>*/}
+          {/*<CNavItem>*/}
+          {/*  <CNavLink href="#">Settings</CNavLink>*/}
+          {/*</CNavItem>*/}
         </CHeaderNav>
-        <CHeaderNav>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon name="cil-bell" size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon name="cil-list" size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon name="cil-envelope-open" size="lg" />
-            </CNavLink>
-          </CNavItem>
-        </CHeaderNav>
+        {/*<CHeaderNav>*/}
+        {/*  <CNavItem>*/}
+        {/*    <CNavLink href="#">*/}
+        {/*      <CIcon name="cil-bell" size="lg" />*/}
+        {/*    </CNavLink>*/}
+        {/*  </CNavItem>*/}
+        {/*  <CNavItem>*/}
+        {/*    <CNavLink href="#">*/}
+        {/*      <CIcon name="cil-list" size="lg" />*/}
+        {/*    </CNavLink>*/}
+        {/*  </CNavItem>*/}
+        {/*  <CNavItem>*/}
+        {/*    <CNavLink href="#">*/}
+        {/*      <CIcon name="cil-envelope-open" size="lg" />*/}
+        {/*    </CNavLink>*/}
+        {/*  </CNavItem>*/}
+        {/*</CHeaderNav>*/}
         <CHeaderNav className="ms-3">
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
-      <CHeaderDivider />
-      <CContainer fluid>
-        <AppBreadcrumb />
-      </CContainer>
+      {/*<CHeaderDivider />*/}
+      {/*<CContainer fluid>*/}
+      {/*  <AppBreadcrumb />*/}
+      {/*</CContainer>*/}
     </CHeader>
   )
 }

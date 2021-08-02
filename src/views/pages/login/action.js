@@ -1,4 +1,3 @@
-import { APP_TOKEN, APP_REFRESH_TOKEN } from 'src/constants/constants'
 import api from '../../../utils/api'
 import * as t from './constant'
 

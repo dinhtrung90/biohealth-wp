@@ -35,8 +35,5 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 
   return <Route {...rest} render={renderRedirect} />
 }
-PrivateRoute.propTypes = {
-  component: PropTypes.object,
-  location: PropTypes.string,
-}
+
 export default PrivateRoute

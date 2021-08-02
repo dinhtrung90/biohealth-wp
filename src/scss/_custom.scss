@@ -1,1 +1,108 @@
 // Here you can add other styles
+.box-shadow-card {
+  box-shadow: 0px 0px 50px -15px rgb(0 0 0 / 33%);
+}
+
+.col-title {
+  font-weight: 300;
+}
+
+.gray-1 {
+  color: #A4A6AE;
+}
+
+.col-border-right {
+  border-right: 1px solid #F3F3F3;
+}
+
+.custom-user-container {
+  margin: 1.5rem;
+  background-color: white;
+  border-radius: 4px;
+
+  .avatar-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .avatar-circle-1 {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 125px;
+      height: 120px;
+      border-radius: 50%;
+      border: 1px solid #F6F5F7;
+
+      .image-cropper {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+
+      img {
+        display: inline;
+        margin: 0 auto;
+        height: 100%;
+        width: auto;
+      }
+    }
+  }
+}
+
+.flex-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.flex-center-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-left {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.flex-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.custom-input-box {
+  width: 80%;
+}
+
+.qr-container {
+  .qr-content {
+    width: 200px;
+    height: 250px;
+    background-color: black;
+    padding: 8px;
+    border-radius: 8px;
+
+    .qr-text {
+      color: white;
+    }
+  }
+}
+
+.custom-drop-date-label {
+  margin-right: 24px;
+}
+
+.custom-drop-date {
+  height: 33px;
+  width: 100px;
+  margin-right: 24px;
+  border: 1px solid #b1b7c1;
+  border-radius: 0.25rem;
+}

@@ -17,11 +17,10 @@ import {
   CFormFeedback,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { FaMobileAlt } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginActions } from './action'
 import { useFormik } from 'formik'
-import { FaLock, FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
+import { FaMobileAlt, FaLock, FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
 
 const Login = (props) => {
   const { t } = useTranslation()
@@ -46,10 +45,9 @@ const Login = (props) => {
   })
 
   const handleLoginSubmit = (values) => {
-    console.log('handleSubmit=', values)
     dispatch(loginActions.login(values)).then((result) => {
-      if (isAuthenticated) {
-        history.push('/')
+      if (result && result.data && result.data.id_token && result.data.id_token.length > 0) {
+        history.push('/user')
       }
     })
   }

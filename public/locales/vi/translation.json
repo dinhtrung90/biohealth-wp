@@ -28,7 +28,22 @@
     "MobilePhone": "Số điện thoại",
     "Login": "Đăng nhập",
     "Password": "Mật khẩu",
-    "ForgotPassword": "Quên mật khẩu"
+    "ForgotPassword": "Quên mật khẩu",
+    "FullNameRequired": "Vui lòng nhập họ tên",
+    "MobilePhoneRequired": "Vui lòng nhập số điện thoại",
+    "SSNRequired": "Vui lòng nhập CMND hay CCCD",
+    "FullName": "Họ và tên",
+    "YourProfile": "Hình cá nhân",
+    "EditYourPersonalSettings": "Thông tin cá nhân",
+    "UploadNewAvatar": "Upload New Avatar",
+    "Gender": "Gender",
+    "BirthDate": "Ngày sinh",
+    "FullAddress": "Địa chỉ nhà",
+    "OtherInformation": "Thông tin khác",
+    "Logout": "Đăng xuất",
+    "Day": "Ngày",
+    "Month": "Tháng",
+    "Year": "Năm"
   },
   "theHeader": {
     "Dashboard": "Trang chủ",

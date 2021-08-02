@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { HashRouter, Route, Switch } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import './scss/style.scss'
 import { PrivateRoute } from './components/index'
 
@@ -10,7 +12,8 @@ const loading = (
 )
 
 // Containers
-const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
+// const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
+const User = React.lazy(() => import('./views/pages/users/User'))
 
 // Pages
 const Login = React.lazy(() => import('./views/pages/login/Login'))
@@ -23,6 +26,11 @@ class App extends Component {
     return (
       <HashRouter>
         <React.Suspense fallback={loading}>
+          <ToastContainer
+            position={toast.POSITION.TOP_RIGHT}
+            className="toastify-container"
+            toastClassName="toastify-toast"
+          />
           <Switch>
             <Route exact path="/login" name="Login Page" render={(props) => <Login {...props} />} />
             <Route
@@ -33,7 +41,7 @@ class App extends Component {
             />
             <Route exact path="/404" name="Page 404" render={(props) => <Page404 {...props} />} />
             <Route exact path="/500" name="Page 500" render={(props) => <Page500 {...props} />} />
-            <PrivateRoute path="/" name="Home" component={DefaultLayout} />
+            <PrivateRoute path="/" name="Home" component={User} />
           </Switch>
         </React.Suspense>
       </HashRouter>

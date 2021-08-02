@@ -12,6 +12,7 @@ const loginReducer = (state = initialState, action) => {
     case t.LOGIN_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
+        isAuthenticated: false,
       })
     case t.LOGIN_SUCCESS:
       localStorage.setItem(APP_TOKEN, action.data.id_token)
@@ -24,6 +25,7 @@ const loginReducer = (state = initialState, action) => {
     case t.LOGIN_FAILURE:
       return Object.assign({}, state, {
         errorFetch: action.error,
+        isAuthenticated: false,
       })
     default:
       return state

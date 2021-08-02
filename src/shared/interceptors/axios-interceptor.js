@@ -78,7 +78,6 @@ const setupAxiosInterceptors = (onUnauthenticated) => {
         break
       case 401:
         window.location.href = `${process.env.REACT_APP_BASE_HREF}/#/login`
-        onUnauthenticated()
         addErrorAlert('UserName Or Password not correct.', 'error.not.authorize')
         break
       default:
