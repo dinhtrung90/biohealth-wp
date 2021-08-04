@@ -36,14 +36,21 @@
     "YourProfile": "Hình cá nhân",
     "EditYourPersonalSettings": "Thông tin cá nhân",
     "UploadNewAvatar": "Upload New Avatar",
-    "Gender": "Gender",
+    "Gender": "Giới tính",
     "BirthDate": "Ngày sinh",
     "FullAddress": "Địa chỉ nhà",
     "OtherInformation": "Thông tin khác",
     "Logout": "Đăng xuất",
     "Day": "Ngày",
     "Month": "Tháng",
-    "Year": "Năm"
+    "Year": "Năm",
+    "Yes": "Có",
+    "No": "Chưa",
+    "ManageUsers": "Quản lý người dùng",
+    "Hotlines": "Danh sách số điện thoại đường dây nóng:",
+    "SearchUserInput": "Nhập tên người cần tìm",
+    "DashboardPage": "Trang chủ",
+    "Profile": "Thông tin cá nhân"
   },
   "theHeader": {
     "Dashboard": "Trang chủ",

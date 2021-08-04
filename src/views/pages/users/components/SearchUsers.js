@@ -14,38 +14,50 @@ import {
   CRow,
   CFormSelect,
 } from '@coreui/react'
-import { AppHeader } from '../../../components/index'
+import { AppHeader } from '../../../../components'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'qrcode.react'
 import { FaMobileAlt } from 'react-icons/fa'
 import { YearPicker, MonthPicker, DayPicker } from 'react-dropdown-date-forked'
-import CDataTable from '../../components/widgets/table/CDataTable'
-import CPagination from '../../components/widgets/pagination/CPagination'
+import CDataTable from '../../../components/widgets/table/CDataTable'
+import CPagination from '../../../components/widgets/pagination/CPagination'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { userActions } from '../user.actions'
 
 const SearchUsers = ({ props }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const dispatch = useDispatch()
-  const isFetching = false // useSelector((state) => state.users.isFetching)
-  const usersData = [] // useSelector((state) => state.users.rewardEligibilities)
-  const eligibilityDetail = {} // useSelector((state) => state.users.rewardEligibilityDetail)
-  const itemsPerPage = 5 // useSelector((state) => state.users.itemsPerPageReward)
-  const totalPages = 0 // useSelector((state) => state.users.totalPages)
+  const isFetching = useSelector((state) => state.users.isFetching)
+  const usersData = useSelector((state) => state.users.users)
+  const itemsPerPage = useSelector((state) => state.users.itemsPerPage)
+  const totalPages = useSelector((state) => state.users.totalPages)
   const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
   const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
   const [page, setPage] = useState(currentPage)
 
   const pageChange = (newPage) => {
-    currentPage !== newPage && history.push(`/search?page=${newPage === 0 ? 1 : newPage}`)
+    currentPage !== newPage && history.push(`/dashboard?page=${newPage === 0 ? 1 : newPage}`)
   }
 
   const onPaginationChange = (numberItemsPerPage) => {
-    // dispatch(userActions.getAllPublicEligibility({ page: 0, size: numberItemsPerPage }))
+    dispatch(userActions.getAllUsers({ page: 0, size: numberItemsPerPage }))
   }
 
-  useEffect(() => {}, [currentPage, page])
+  const getAllUsers = async () => {
+    dispatch(
+      userActions.getAllUsers({ page: currentPage > 1 ? currentPage - 1 : 0, size: itemsPerPage }),
+    )
+    setPage(currentPage)
+  }
+
+  useEffect(() => {
+    const loadData = async () => {
+      await getAllUsers()
+    }
+    loadData()
+  }, [dispatch, currentPage, page])
 
   const onRowClick = (item) => {
     console.log('onRowClick=', item)
@@ -66,7 +78,7 @@ const SearchUsers = ({ props }) => {
                   items={usersData}
                   fields={[
                     { key: 'phone', label: 'Số điện thoại' },
-                    { key: 'fullName', label: 'Họ và tên' },
+                    { key: 'firstName', label: 'Họ và tên' },
                     { key: 'ssn', label: 'CMND/CCCD' },
                     { key: 'fullAddress', label: 'Địa chỉ nhà' },
                   ]}

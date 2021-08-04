@@ -41,9 +41,17 @@
     "FullAddress": "Full Address",
     "OtherInformation": "Other Information",
     "Logout": "Logout",
-    "Day": "Ngày",
-    "Month": "Tháng",
-    "Year": "Năm"
+    "Day": "Day",
+    "Month": "Month",
+    "Year": "Year",
+    "Yes": "Yes",
+    "No": "No",
+    "ManageUsers": "Manage Users",
+    "Hotlines": "Hotlines:",
+    "SearchUserInput": "Search",
+    "SearchAll": "",
+    "DashboardPage": "Dashboard",
+    "Profile": "Profile"
   },
   "theHeader": {
     "Dashboard": "Dashboard",

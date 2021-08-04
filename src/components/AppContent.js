@@ -7,7 +7,7 @@ import routes from '../routes'
 
 const AppContent = () => {
   return (
-    <CContainer lg>
+    <div>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Switch>
           {routes.map((route, idx) => {
@@ -30,7 +30,7 @@ const AppContent = () => {
           <Redirect from="/" to="/dashboard" />
         </Switch>
       </Suspense>
-    </CContainer>
+    </div>
   )
 }
 

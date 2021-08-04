@@ -19,6 +19,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginActions } from './action'
+import { userActions } from '../../pages/users/user.actions'
 import { useFormik } from 'formik'
 import { FaMobileAlt, FaLock, FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
 
@@ -45,9 +46,15 @@ const Login = (props) => {
   })
 
   const handleLoginSubmit = (values) => {
-    dispatch(loginActions.login(values)).then((result) => {
-      if (result && result.data && result.data.id_token && result.data.id_token.length > 0) {
-        history.push('/user')
+    dispatch(loginActions.login(values)).then(handleGetAccount)
+  }
+
+  const handleGetAccount = () => {
+    dispatch(userActions.getAccount()).then((result) => {
+      if (result && result.account && result.account.authorities.includes('ROLE_ADMIN')) {
+        history.push('/dashboard')
+      } else {
+        history.push(`/profile/${result.account.id}`)
       }
     })
   }

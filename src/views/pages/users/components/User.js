@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   CButton,
   CCard,
@@ -14,18 +15,29 @@ import {
   CRow,
   CFormSelect,
 } from '@coreui/react'
-import { AppHeader } from '../../../components/index'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'qrcode.react'
+import CIcon from '@coreui/icons-react'
 import { FaMobileAlt } from 'react-icons/fa'
 import { YearPicker, MonthPicker, DayPicker } from 'react-dropdown-date-forked'
+import { userActions } from '../user.actions'
+import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import vi from 'date-fns/locale/vi'
+registerLocale('vi', vi)
 
 const User = ({ props }) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const account = useSelector((state) => state.users.account)
   const today = new Date()
   const [birthDay, setBirthDay] = useState(today.getDate())
   const [birthMonth, setBirthMonth] = useState(today.getMonth())
   const [birthYear, setBirthYear] = useState(today.getFullYear())
+  const [vaccinatedDate, setVaccinatedDate] = useState()
+  const [testDate, setTestDate] = useState()
+
+  console.log('account=', account)
 
   const constGenders = {
     NONE: 'NONE',
@@ -54,6 +66,10 @@ const User = ({ props }) => {
       console.log('handleRadioTestChange No=', e)
     }
   }
+
+  useEffect(() => {
+    dispatch(userActions.getAccount())
+  }, [dispatch])
 
   return (
     <div>
@@ -114,63 +130,69 @@ const User = ({ props }) => {
                 <CFormLabel htmlFor="gender">{t('common.BirthDate')}</CFormLabel>
                 <div className="flex-center">
                   <div className="text-center">
-                    <div className="custom-drop-date-label">{t('common.Day')}</div>
-                    <DayPicker
-                      year={birthYear} // mandatory
-                      month={birthMonth} // mandatory
-                      endYearGiven // mandatory if end={} is given in YearPicker
-                      value={birthDay} // mandatory
-                      onChange={(day) => {
-                        // mandatory
-                        setBirthDay(day)
-                        console.log('=== day===')
-                        console.log(day)
-                        console.log(birthMonth)
-                        console.log(birthYear)
-                        console.log('=== end day===')
-                      }}
-                      id={'day'}
-                      name={'day'}
-                      classes={'custom-drop-date'}
-                      optionClasses={'option classes'}
-                    />
+                    <div className="custom-drop-date-label mb-2">{t('common.Day')}</div>
+                    <div className="clr-select-wrapper">
+                      <DayPicker
+                        year={birthYear} // mandatory
+                        month={birthMonth} // mandatory
+                        endYearGiven // mandatory if end={} is given in YearPicker
+                        value={birthDay} // mandatory
+                        onChange={(day) => {
+                          // mandatory
+                          setBirthDay(day)
+                          console.log('=== day===')
+                          console.log(day)
+                          console.log(birthMonth)
+                          console.log(birthYear)
+                          console.log('=== end day===')
+                        }}
+                        id={'day'}
+                        name={'day'}
+                        classes={'custom-drop-date clr-select'}
+                        optionClasses={'option classes'}
+                      />
+                    </div>
                   </div>
                   <div className="text-center">
-                    <div className="custom-drop-date-label">{t('common.Month')}</div>
-                    <MonthPicker
-                      numeric // to get months as numbers
-                      short // default is full name
-                      caps // default is Titlecase
-                      endYearGiven // mandatory if end={} is given in YearPicker
-                      year={birthYear} // mandatory
-                      value={birthMonth} // mandatory
-                      onChange={(month) => {
-                        // mandatory
-                        setBirthMonth(month)
-                        setBirthDay(1)
-                        console.log(month)
-                      }}
-                      id={'month'}
-                      name={'month'}
-                      classes={'custom-drop-date'}
-                      optionClasses={'option classes'}
-                    />
+                    <div className="custom-drop-date-label mb-2">{t('common.Month')}</div>
+                    <div className="clr-select-wrapper">
+                      <MonthPicker
+                        numeric // to get months as numbers
+                        short // default is full name
+                        caps // default is Titlecase
+                        endYearGiven // mandatory if end={} is given in YearPicker
+                        year={birthYear} // mandatory
+                        value={birthMonth} // mandatory
+                        onChange={(month) => {
+                          // mandatory
+                          setBirthMonth(month)
+                          setBirthDay(1)
+                          console.log(month)
+                        }}
+                        id={'month'}
+                        name={'month'}
+                        classes={'custom-drop-date clr-select'}
+                        optionClasses={'option classes'}
+                      />
+                    </div>
                   </div>
                   <div className="text-center">
-                    <div className="custom-drop-date-label">{t('common.Year')}</div>
-                    <YearPicker
-                      reverse // default is ASCENDING
-                      value={birthYear}
-                      onChange={(year) => {
-                        // mandatory
-                        setBirthYear(year)
-                        console.log(year)
-                      }}
-                      id={'year'}
-                      name={'year'}
-                      classes={'custom-drop-date'}
-                      optionClasses={'option classes'}
-                    />
+                    <div className="custom-drop-date-label mb-2">{t('common.Year')}</div>
+                    <div className="clr-select-wrapper">
+                      <YearPicker
+                        reverse // default is ASCENDING
+                        value={birthYear}
+                        onChange={(year) => {
+                          // mandatory
+                          setBirthYear(year)
+                          console.log(year)
+                        }}
+                        id={'year'}
+                        name={'year'}
+                        classes={'custom-drop-date clr-select'}
+                        optionClasses={'option classes'}
+                      />
+                    </div>
                   </div>
                 </div>
               </CCol>
@@ -194,8 +216,8 @@ const User = ({ props }) => {
               <h4 className="col-title gray-1">{t('common.OtherInformation')}</h4>
               <hr />
             </CCol>
-            <CCol sm="12">
-              <p>Bạn chích ngừa covid chưa?</p>
+            <CCol sm="12 mb-4">
+              <div>Bạn chích ngừa covid chưa?</div>
               <div className="flex-left">
                 <CFormCheck
                   type="radio"
@@ -214,9 +236,24 @@ const User = ({ props }) => {
                   onClick={(e) => handleRadioVaccinatedChange(e)}
                 />
               </div>
+              <CInputGroup>
+                <CInputGroupText>
+                  <CIcon name="cil-calendar" />
+                </CInputGroupText>
+                <DatePicker
+                  selected={vaccinatedDate}
+                  onChange={(date) => setVaccinatedDate(date)}
+                  peekNextMonth
+                  showMonthDropdown
+                  showYearDropdown
+                  dropdownMode="select"
+                  locale="vi"
+                  calendarStartDay={1}
+                />
+              </CInputGroup>
             </CCol>
             <CCol sm="12">
-              <p>Lần test nhanh/PCR gần nhất</p>
+              <div>Lần test nhanh/PCR gần nhất</div>
               <div className="flex-left">
                 <CFormCheck
                   type="radio"
@@ -235,6 +272,21 @@ const User = ({ props }) => {
                   onClick={(e) => handleRadioTestChange(e)}
                 />
               </div>
+              <CInputGroup>
+                <CInputGroupText>
+                  <CIcon name="cil-calendar" />
+                </CInputGroupText>
+                <DatePicker
+                  selected={testDate}
+                  onChange={(date) => setTestDate(date)}
+                  peekNextMonth
+                  showMonthDropdown
+                  showYearDropdown
+                  dropdownMode="select"
+                  locale="vi"
+                  calendarStartDay={1}
+                />
+              </CInputGroup>
             </CCol>
             <CCol sm="12">
               <hr />

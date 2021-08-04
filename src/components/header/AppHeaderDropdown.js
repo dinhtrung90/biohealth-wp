@@ -11,15 +11,23 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useTranslation } from 'react-i18next'
-import { APP_TOKEN } from 'src/constants/constants'
+import { APP_TOKEN, APP_USER } from 'src/constants/constants'
 import { useHistory } from 'react-router-dom'
+import { FaRegUser } from 'react-icons/fa'
+import { useSelector } from 'react-redux'
 
 const AppHeaderDropdown = () => {
   const { t } = useTranslation()
   const history = useHistory()
+  let account = {}
+  const accountStorage = localStorage.getItem(APP_USER)
+  if (accountStorage && accountStorage.length > 0) {
+    account = JSON.parse(accountStorage)
+  }
 
   const handleLogout = () => {
     localStorage.removeItem(APP_TOKEN)
+    localStorage.removeItem(APP_USER)
     history.push('/login')
   }
 
@@ -29,14 +37,10 @@ const AppHeaderDropdown = () => {
         <CAvatar src="/avatars/8.jpg" size="md" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        {/*<CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>*/}
-        {/*<CDropdownItem href="#">*/}
-        {/*  <CIcon name="cil-bell" className="me-2" />*/}
-        {/*  Updates*/}
-        {/*  <CBadge color="info" className="ms-2">*/}
-        {/*    42*/}
-        {/*  </CBadge>*/}
-        {/*</CDropdownItem>*/}
+        <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
+        <CDropdownItem href={`#/profile/${account.userId}`}>
+          <FaRegUser /> {t('common.Profile')}
+        </CDropdownItem>
         {/*<CDropdownItem href="#">*/}
         {/*  <CIcon name="cil-envelope-open" className="me-2" />*/}
         {/*  Messages*/}
@@ -81,7 +85,7 @@ const AppHeaderDropdown = () => {
         {/*    42*/}
         {/*  </CBadge>*/}
         {/*</CDropdownItem>*/}
-        {/*<CDropdownDivider />*/}
+        <CDropdownDivider />
         <CDropdownItem href="#" onClick={handleLogout}>
           <CIcon name="cil-lock-locked" className="me-2" />
           {t('common.Logout')}
