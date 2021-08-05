@@ -46,12 +46,14 @@ const Login = (props) => {
   })
 
   const handleLoginSubmit = (values) => {
-    dispatch(loginActions.login(values)).then(handleGetAccount)
+    dispatch(loginActions.login(values)).then((result) => handleGetAccount(result))
   }
 
-  const handleGetAccount = () => {
+  const handleGetAccount = (result) => {
+    if (!result) return
     dispatch(userActions.getAccount()).then((result) => {
-      if (result && result.account && result.account.authorities.includes('ROLE_ADMIN')) {
+      if (!result || !result.account) return
+      if (result.account.authorities.includes('ROLE_ADMIN')) {
         history.push('/dashboard')
       } else {
         history.push(`/profile/${result.account.id}`)
