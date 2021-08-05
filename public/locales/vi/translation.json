@@ -39,6 +39,7 @@
     "Gender": "Giới tính",
     "BirthDate": "Ngày sinh",
     "FullAddress": "Địa chỉ nhà",
+    "Quarter_Group": "Tổ (Khu phố)",
     "OtherInformation": "Thông tin khác",
     "Logout": "Đăng xuất",
     "Day": "Ngày",
@@ -50,7 +51,9 @@
     "Hotlines": "Danh sách số điện thoại đường dây nóng:",
     "SearchUserInput": "Nhập tên người cần tìm",
     "DashboardPage": "Trang chủ",
-    "Profile": "Thông tin cá nhân"
+    "Profile": "Thông tin cá nhân",
+    "SSN": "CMND/CCCD",
+    "UserPermission": "Phân quyền người dùng"
   },
   "theHeader": {
     "Dashboard": "Trang chủ",

@@ -39,6 +39,7 @@
     "Gender": "Gender",
     "BirthDate": "Birth Date",
     "FullAddress": "Full Address",
+    "Quarter_Group": "Quarter (Group)",
     "OtherInformation": "Other Information",
     "Logout": "Logout",
     "Day": "Day",
@@ -51,7 +52,9 @@
     "SearchUserInput": "Search",
     "SearchAll": "",
     "DashboardPage": "Dashboard",
-    "Profile": "Profile"
+    "Profile": "Profile",
+    "SSN": "SSN",
+    "UserPermission": "User Permission"
   },
   "theHeader": {
     "Dashboard": "Dashboard",

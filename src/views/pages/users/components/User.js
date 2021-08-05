@@ -46,6 +46,12 @@ const User = ({ props }) => {
     UNKNOWN: 'Unknown',
   }
 
+  const roles = {
+    ADMIN: 'ROLE_ADMIN',
+    SUPPORT_USER: 'ROLE_SUPPORT_USER',
+    USER: 'ROLE_USER',
+  }
+
   const questions = [
     { title: 'Bạn chích ngừa covid chưa?', response: '' },
     { title: 'Lần test nhanh/PCR gần nhất', response: '' },
@@ -113,6 +119,10 @@ const User = ({ props }) => {
               <CCol sm="12" className="mb-4 pe-4">
                 <CFormLabel htmlFor="mobilePhone">{t('common.MobilePhone')}</CFormLabel>
                 <CFormControl id="mobilePhone" placeholder={t('common.MobilePhone')} />
+              </CCol>
+              <CCol sm="12" className="mb-4 pe-4">
+                <CFormLabel htmlFor="ssn">{t('common.SSN')}</CFormLabel>
+                <CFormControl id="ssn" placeholder={t('common.SSN')} />
               </CCol>
               <CCol sm="12" className="mb-4 pe-4">
                 <CFormLabel htmlFor="gender">{t('common.Gender')}</CFormLabel>
@@ -198,6 +208,10 @@ const User = ({ props }) => {
               </CCol>
               <CCol sm="12">
                 <hr />
+              </CCol>
+              <CCol sm="12" className="mb-4 pe-4">
+                <CFormLabel htmlFor="QuarterGroup">{t('common.Quarter_Group')}</CFormLabel>
+                <CFormControl id="QuarterGroup" placeholder={t('common.Quarter_Group')} />
               </CCol>
               <CCol sm="12" className="mb-4 pe-4">
                 <CFormLabel htmlFor="fullAddress">{t('common.FullAddress')}</CFormLabel>
@@ -292,9 +306,104 @@ const User = ({ props }) => {
               <hr />
             </CCol>
             <CCol sm="12">
-              <CFormLabel htmlFor="fullAddress">
+              <CFormLabel>
+                <strong>{t('common.UserPermission')}</strong>
+              </CFormLabel>
+              <CFormSelect name="userRoles" id="userRoles">
+                <option value={roles.ADMIN}>Quản trị viên</option>
+                <option value={roles.SUPPORT_USER}>Hỗ trợ người dùng</option>
+                <option value={roles.USER}>Người dùng</option>
+              </CFormSelect>
+            </CCol>
+            <CCol sm="12">
+              <hr />
+            </CCol>
+            <CCol sm="12">
+              <CFormLabel>
                 <strong>{t('common.Hotlines')}</strong>
               </CFormLabel>
+              <CRow>
+                <CCol sm={12} className="mb-1 pe-5">
+                  <CFormLabel htmlFor="MobileNumber" className="col-form-label">
+                    SĐT Tổ trường:
+                  </CFormLabel>
+                  <CInputGroup>
+                    <CInputGroupText>
+                      <CIcon name="cil-phone" />
+                    </CInputGroupText>
+                    <CFormControl
+                      type="tel"
+                      id="MobileNumberQuarter"
+                      name="MobileNumberQuarter"
+                      placeholder="SĐT tổ trường"
+                    />
+                  </CInputGroup>
+                </CCol>
+                <CCol sm={12} className="mb-1 pe-5">
+                  <CFormLabel htmlFor="MobileNumber" className="col-form-label">
+                    SĐT Phường:
+                  </CFormLabel>
+                  <CInputGroup>
+                    <CInputGroupText>
+                      <CIcon name="cil-phone" />
+                    </CInputGroupText>
+                    <CFormControl
+                      type="tel"
+                      id="MobileNumberWard"
+                      name="MobileNumberWard"
+                      placeholder="SĐT Phường"
+                    />
+                  </CInputGroup>
+                </CCol>
+                <CCol sm={12} className="mb-1 pe-5">
+                  <CFormLabel htmlFor="MobileNumber" className="col-form-label">
+                    SĐT Công An Phường:
+                  </CFormLabel>
+                  <CInputGroup>
+                    <CInputGroupText>
+                      <CIcon name="cil-phone" />
+                    </CInputGroupText>
+                    <CFormControl
+                      type="tel"
+                      id="MobileNumberWardPolice"
+                      name="MobileNumberWardPolice"
+                      placeholder="SĐT công an Phường"
+                    />
+                  </CInputGroup>
+                </CCol>
+                <CCol sm={12} className="mb-1 pe-5">
+                  <CFormLabel htmlFor="MobileNumber" className="col-form-label">
+                    SĐT Y tế Phường:
+                  </CFormLabel>
+                  <CInputGroup>
+                    <CInputGroupText>
+                      <CIcon name="cil-phone" />
+                    </CInputGroupText>
+                    <CFormControl
+                      type="tel"
+                      id="MobileNumberWardHealth"
+                      name="MobileNumberWardHealth"
+                      placeholder="SĐT Y tế Phường"
+                    />
+                  </CInputGroup>
+                </CCol>
+                <CCol sm={12} className="mb-1 pe-5">
+                  <CFormLabel htmlFor="MobileNumber" className="col-form-label">
+                    SĐT Lực lượng phòng dịch Phường (Quận):
+                  </CFormLabel>
+                  <CInputGroup>
+                    <CInputGroupText>
+                      <CIcon name="cil-phone" />
+                    </CInputGroupText>
+                    <CFormControl
+                      type="tel"
+                      id="MobileNumberWardHealth"
+                      name="MobileNumberWardHealth"
+                      placeholder="SĐT Lực lượng phòng dịch"
+                    />
+                  </CInputGroup>
+                </CCol>
+              </CRow>
             </CCol>
           </CCol>
         </CRow>
