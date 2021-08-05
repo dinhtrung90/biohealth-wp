@@ -32,7 +32,7 @@ const setupAxiosInterceptors = (onUnauthenticated) => {
     switch (status) {
       // connection refused, server not reachable
       case 0:
-        addErrorAlert('Server not reachable', 'error.server.not.reachable')
+        addErrorAlert('Lỗi server', 'error.server.not.reachable')
         break
       case 400: {
         const headers = Object.entries(response.headers)
@@ -70,7 +70,7 @@ const setupAxiosInterceptors = (onUnauthenticated) => {
         break
       }
       case 404:
-        addErrorAlert('Not found', 'error.url.not.found')
+        addErrorAlert('Không tìm thấy', 'error.url.not.found')
         break
 
       case 403:
@@ -78,7 +78,7 @@ const setupAxiosInterceptors = (onUnauthenticated) => {
         break
       case 401:
         window.location.href = `${process.env.REACT_APP_BASE_HREF}/#/login`
-        addErrorAlert('UserName Or Password not correct.', 'error.not.authorize')
+        addErrorAlert('Tên đăng nhập hoặc mật khẩu không dúng!', 'error.not.authorize')
         break
       default:
         if (data !== '' && data.message) {
