@@ -1,5 +1,5 @@
 # build environment
-FROM current-alpine3.9 as build
+FROM node:current-alpine3.9 as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY .env.template ./.env
