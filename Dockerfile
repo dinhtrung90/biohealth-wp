@@ -1,5 +1,5 @@
 # build environment
-FROM node:lts-alpine as build
+FROM alpine:3.9 as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY .env.template ./.env
