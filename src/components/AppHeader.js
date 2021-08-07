@@ -15,7 +15,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useTranslation } from 'react-i18next'
-import { FaSearch, FaHome } from 'react-icons/fa'
+import { FaUserFriends, FaHome } from 'react-icons/fa'
 
 import { AppHeaderDropdown } from './header/index'
 import { APP_USER } from '../constants'
@@ -42,28 +42,34 @@ const AppHeader = () => {
         {/*<CHeaderBrand to="/">*/}
         {/*  <CIcon name="logo" height="48" alt="Logo" />*/}
         {/*</CHeaderBrand>*/}
-        <CHeaderNav className="d-none d-md-flex me-auto">
-          {isAdmin ? (
+        {isAdmin ? (
+          <CHeaderNav className="d-none d-md-flex me-auto">
             <CNavItem>
               <CNavLink href="#" to="/dashboard" className="flex-center-items">
                 <FaHome className="me-1" />
                 {t('common.DashboardPage')}
               </CNavLink>
             </CNavItem>
-          ) : null}
-          {/*<CNavItem>*/}
-          {/*  <CNavLink href="#" onClick={(e) => navigateToSearch(e)} className="flex-center-items">*/}
-          {/*    <FaSearch />*/}
-          {/*    {t('common.ManageUsers')}*/}
-          {/*  </CNavLink>*/}
-          {/*</CNavItem>*/}
-          {/*<CNavItem>*/}
-          {/*  <CNavLink href="#">Users</CNavLink>*/}
-          {/*</CNavItem>*/}
-          {/*<CNavItem>*/}
-          {/*  <CNavLink href="#">Settings</CNavLink>*/}
-          {/*</CNavItem>*/}
-        </CHeaderNav>
+            <CNavItem>
+              <CNavLink href="#/quarters" className="flex-center-items">
+                <FaUserFriends className="me-1" />
+                {t('common.ManageQuarter')}
+              </CNavLink>
+            </CNavItem>
+            {/*<CNavItem>*/}
+            {/*  <CNavLink href="#" onClick={(e) => navigateToSearch(e)} className="flex-center-items">*/}
+            {/*    <FaSearch />*/}
+            {/*    {t('common.ManageUsers')}*/}
+            {/*  </CNavLink>*/}
+            {/*</CNavItem>*/}
+            {/*<CNavItem>*/}
+            {/*  <CNavLink href="#">Users</CNavLink>*/}
+            {/*</CNavItem>*/}
+            {/*<CNavItem>*/}
+            {/*  <CNavLink href="#">Settings</CNavLink>*/}
+            {/*</CNavItem>*/}
+          </CHeaderNav>
+        ) : null}
         {/*<CHeaderNav>*/}
         {/*  <CNavItem>*/}
         {/*    <CNavLink href="#">*/}

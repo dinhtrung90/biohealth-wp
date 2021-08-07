@@ -4,64 +4,79 @@ import { APP_USER } from '../../../constants'
 const initialState = {
   isFetched: false,
   isFetching: false,
-  account: null,
-  user: null,
-  users: [],
+  provinces: [],
+  districts: [],
+  wards: [],
+  quarterTree: [],
+  isFetchedQuarter: false,
   totalPages: 0,
   itemsPerPage: 10,
 }
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case t.ACCOUNT_GET_REQUEST:
+    case t.PROVINCE_GET_ALL_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
       })
-    case t.ACCOUNT_GET_SUCCESS:
-      localStorage.setItem(
-        APP_USER,
-        JSON.stringify({
-          userId: action.account.id,
-          authorities: action.account.authorities,
-        }),
-      )
+    case t.PROVINCE_GET_ALL_SUCCESS:
+      action.provinces.forEach((p) => {
+        p.value = p.id
+        p.label = p.name
+      })
       return Object.assign({}, state, {
         isFetching: false,
         isFetched: true,
-        user: action.account,
+        provinces: action.provinces,
       })
-    case t.ACCOUNT_GET_FAILURE:
+    case t.PROVINCE_GET_ALL_FAILURE:
       return Object.assign({}, state, {
         errorFetch: action.error,
       })
-    case t.USERS_GET_REQUEST:
+    case t.DISTRICT_GET_ALL_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
       })
-    case t.USERS_GET_SUCCESS:
+    case t.DISTRICT_GET_ALL_SUCCESS:
+      action.districts.forEach((p) => {
+        p.value = p.id
+        p.label = p.name
+      })
       return Object.assign({}, state, {
         isFetching: false,
         isFetched: true,
-        users: action.response.data,
-        totalPages: Math.ceil(action.response.headers['x-total-count'] / state.itemsPerPage),
+        districts: action.districts,
       })
-    case t.USERS_GET_FAILURE:
+    case t.DISTRICT_GET_ALL_FAILURE:
       return Object.assign({}, state, {
         errorFetch: action.error,
       })
-    case t.USER_GET_REQUEST:
+    case t.WARD_GET_ALL_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
       })
-    case t.USER_GET_SUCCESS:
+    case t.WARD_GET_ALL_SUCCESS:
+      action.wards.forEach((p) => {
+        p.value = p.id
+        p.label = p.name
+      })
       return Object.assign({}, state, {
         isFetching: false,
         isFetched: true,
-        user: action.user,
+        wards: action.wards,
       })
-    case t.USER_GET_FAILURE:
+    case t.WARD_GET_ALL_FAILURE:
       return Object.assign({}, state, {
         errorFetch: action.error,
+      })
+    case t.UPDATE_QUARTER_TREE_REQUEST:
+      return Object.assign({}, state, {
+        isFetchedQuarter: false,
+      })
+    case t.UPDATE_QUARTER_TREE_SUCCESS:
+      return Object.assign({}, state, {
+        isFetchedQuarter: true,
+        quarterTree: action.data,
       })
     default:
       return state

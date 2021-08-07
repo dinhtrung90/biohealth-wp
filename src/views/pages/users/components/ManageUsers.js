@@ -25,7 +25,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { userActions } from '../user.actions'
 
-const SearchUsers = ({ props }) => {
+const ManageUsers = ({ props }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const dispatch = useDispatch()
@@ -68,7 +68,7 @@ const SearchUsers = ({ props }) => {
 
   return (
     <div>
-      <div className="body flex-grow-1 custom-user-container box-shadow-card ps-3">
+      <div className="body flex-grow-1 custom-main-container box-shadow-card ps-3">
         <CRow className="justify-content-center">
           <h4 className="mt-4 mb-4">{t('common.UserList')}</h4>
           <CCol sm="12">
@@ -108,4 +108,4 @@ const SearchUsers = ({ props }) => {
   )
 }
 
-export default SearchUsers
+export default ManageUsers

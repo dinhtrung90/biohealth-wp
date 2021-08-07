@@ -20,9 +20,9 @@ import CDataTable from '../../../components/widgets/table/CDataTable'
 import CPagination from '../../../components/widgets/pagination/CPagination'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { userActions } from '../user.actions'
+import { quarterActions } from '../quarter.actions'
 
-const Quarters = ({ props }) => {
+const ManageQuarters = ({ props }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const dispatch = useDispatch()
@@ -39,13 +39,13 @@ const Quarters = ({ props }) => {
   }
 
   const onPaginationChange = (numberItemsPerPage) => {
-    dispatch(userActions.getAllUsers({ page: 0, size: numberItemsPerPage }))
+    // dispatch(quarterActions.getAllUsers({ page: 0, size: numberItemsPerPage }))
   }
 
   const getAllUsers = async () => {
-    dispatch(
-      userActions.getAllUsers({ page: currentPage > 1 ? currentPage - 1 : 0, size: itemsPerPage }),
-    )
+    // dispatch(
+    //   quarterActions.getAllUsers({ page: currentPage > 1 ? currentPage - 1 : 0, size: itemsPerPage }),
+    // )
     setPage(currentPage)
   }
 
@@ -63,13 +63,18 @@ const Quarters = ({ props }) => {
     // })
   }
 
+  const navigateToQuarter = (e) => {
+    e.preventDefault()
+    history.push('/quarter')
+  }
+
   return (
     <div>
-      <div className="body flex-grow-1 custom-user-container box-shadow-card ps-3">
+      <div className="body flex-grow-1 custom-main-container box-shadow-card ps-3">
         <CRow className="justify-content-center">
           <div className="flex-space-between pe-5">
             <h4 className="mt-4 mb-4">{t('common.QuarterList')}</h4>
-            <CButton style={{ height: '33px' }}>
+            <CButton style={{ height: '33px' }} onClick={(e) => navigateToQuarter(e)}>
               <FaPlus /> Tạo mới
             </CButton>
           </div>
@@ -80,10 +85,11 @@ const Quarters = ({ props }) => {
                   loading={isFetching}
                   items={usersData}
                   fields={[
-                    { key: 'phone', label: 'Số điện thoại' },
-                    { key: 'firstName', label: 'Họ và tên' },
-                    { key: 'ssn', label: 'CMND/CCCD' },
-                    { key: 'fullAddress', label: 'Địa chỉ nhà' },
+                    { key: 'quarter', label: 'Tổ' },
+                    { key: 'group', label: 'Khu phố' },
+                    { key: 'ward', label: 'Phường' },
+                    { key: 'district', label: 'Quận' },
+                    { key: 'province', label: 'Tỉnh' },
                   ]}
                   hover
                   tableFilter
@@ -110,4 +116,4 @@ const Quarters = ({ props }) => {
   )
 }
 
-export default Quarters
+export default ManageQuarters

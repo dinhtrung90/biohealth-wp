@@ -54,7 +54,10 @@
     "DashboardPage": "Dashboard",
     "Profile": "Profile",
     "SSN": "SSN",
-    "UserPermission": "User Permission"
+    "UserPermission": "User Permission",
+    "UserList": "Users",
+    "ManageQuarter": "Quarters",
+    "QuarterList": "Quarters"
   },
   "theHeader": {
     "Dashboard": "Dashboard",

@@ -53,7 +53,10 @@
     "DashboardPage": "Trang chủ",
     "Profile": "Thông tin cá nhân",
     "SSN": "CMND/CCCD",
-    "UserPermission": "Phân quyền người dùng"
+    "UserPermission": "Phân quyền người dùng",
+    "UserList": "Danh sách người dùng",
+    "ManageQuarter": "Quản lý địa phương",
+    "QuarterList": "Danh sách địa phương"
   },
   "theHeader": {
     "Dashboard": "Trang chủ",

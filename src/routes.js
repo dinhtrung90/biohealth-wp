@@ -51,7 +51,9 @@ const Toasts = React.lazy(() => import('./views/components/notifications/toasts/
 // const Page500 = React.lazy(() => import('./views/examples/pages/page500/Page500'))
 
 const User = React.lazy(() => import('./views/pages/users/components/User'))
-const SearchUsers = React.lazy(() => import('./views/pages/users/components/SearchUsers'))
+const ManageUsers = React.lazy(() => import('./views/pages/users/components/ManageUsers'))
+const ManageQuarters = React.lazy(() => import('./views/pages/quarter/components/ManageQuarters'))
+const Quarter = React.lazy(() => import('./views/pages/quarter/components/Quarter'))
 
 const Widgets = React.lazy(() => import('./views/components/widgets/Widgets'))
 
@@ -61,7 +63,10 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/profile/:id', name: 'User', component: User },
-  { path: '/dashboard', name: 'Dashboard', component: SearchUsers },
+  { path: '/dashboard', name: 'Dashboard', component: ManageUsers },
+  { path: '/quarters', name: 'ManageQuarters', component: ManageQuarters },
+  { path: '/quarter', name: 'User', component: Quarter },
+
   // { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
