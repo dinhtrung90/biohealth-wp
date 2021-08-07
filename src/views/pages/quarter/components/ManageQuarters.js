@@ -14,18 +14,15 @@ import {
   CRow,
   CFormSelect,
 } from '@coreui/react'
-import { AppHeader } from '../../../../components'
 import { useTranslation } from 'react-i18next'
-import QRCode from 'qrcode.react'
-import { FaMobileAlt } from 'react-icons/fa'
-import { YearPicker, MonthPicker, DayPicker } from 'react-dropdown-date-forked'
+import { FaPlus } from 'react-icons/fa'
 import CDataTable from '../../../components/widgets/table/CDataTable'
 import CPagination from '../../../components/widgets/pagination/CPagination'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { userActions } from '../user.actions'
 
-const SearchUsers = ({ props }) => {
+const Quarters = ({ props }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const dispatch = useDispatch()
@@ -38,7 +35,7 @@ const SearchUsers = ({ props }) => {
   const [page, setPage] = useState(currentPage)
 
   const pageChange = (newPage) => {
-    currentPage !== newPage && history.push(`/dashboard?page=${newPage === 0 ? 1 : newPage}`)
+    currentPage !== newPage && history.push(`/quarters?page=${newPage === 0 ? 1 : newPage}`)
   }
 
   const onPaginationChange = (numberItemsPerPage) => {
@@ -70,6 +67,12 @@ const SearchUsers = ({ props }) => {
     <div>
       <div className="body flex-grow-1 custom-user-container box-shadow-card ps-3">
         <CRow className="justify-content-center">
+          <div className="flex-space-between pe-5">
+            <h4 className="mt-4 mb-4">{t('common.QuarterList')}</h4>
+            <CButton style={{ height: '33px' }}>
+              <FaPlus /> Tạo mới
+            </CButton>
+          </div>
           <CCol sm="12">
             <CCard className="mx-4">
               <CCardBody className="p-4">
@@ -107,4 +110,4 @@ const SearchUsers = ({ props }) => {
   )
 }
 
-export default SearchUsers
+export default Quarters
