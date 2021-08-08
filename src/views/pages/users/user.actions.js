@@ -51,11 +51,37 @@ function getAllUsers(data) {
   }
 }
 
+function getAllProfileUsers(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.userService
+      .getAllProfileUsers(data)
+      .then((response) => {
+        dispatch(success(response))
+      })
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.USER_PROFILE_GET_ALL_REQUEST }
+  }
+
+  function success(response) {
+    return { type: t.USER_PROFILE_GET_ALL_SUCCESS, response }
+  }
+
+  function failure(error) {
+    return { type: t.USER_PROFILE_GET_ALL_FAILURE, error }
+  }
+}
+
 function getProfile(data) {
   return (dispatch) => {
     dispatch(request())
     return api.userService
-      .getProfile(data)
+      .getProfileById(data)
       .then((response) => dispatch(success(response.data)))
       .catch((error) => {
         dispatch(failure(error))
@@ -78,5 +104,6 @@ function getProfile(data) {
 export const userActions = {
   getAccount,
   getAllUsers,
+  getAllProfileUsers,
   getProfile,
 }

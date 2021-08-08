@@ -169,6 +169,7 @@ const Quarter = ({ props }) => {
                     </CInputGroup>
                   </CCol>
                   <CCol sm={12}>
+                    quarterTree={JSON.stringify(quarterTree)}
                     {isFetchedQuarter > 0 ? (
                       <div style={{ height: 400 }}>
                         <SortableTree

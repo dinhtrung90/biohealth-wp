@@ -42,12 +42,15 @@ const ManageUsers = ({ props }) => {
   }
 
   const onPaginationChange = (numberItemsPerPage) => {
-    dispatch(userActions.getAllUsers({ page: 0, size: numberItemsPerPage }))
+    dispatch(userActions.getAllProfileUsers({ page: 0, size: numberItemsPerPage }))
   }
 
   const getAllUsers = async () => {
     dispatch(
-      userActions.getAllUsers({ page: currentPage > 1 ? currentPage - 1 : 0, size: itemsPerPage }),
+      userActions.getAllProfileUsers({
+        page: currentPage > 1 ? currentPage - 1 : 0,
+        size: itemsPerPage,
+      }),
     )
     setPage(currentPage)
   }
@@ -61,6 +64,7 @@ const ManageUsers = ({ props }) => {
 
   const onRowClick = (item) => {
     console.log('onRowClick=', item)
+    history.push(`/profile/${item.id}`)
     // dispatch(userActions.getPublicEligibilityDetail(item)).then((r) => {
     //   setRewardPopup(!rewardPopup)
     // })
@@ -78,8 +82,8 @@ const ManageUsers = ({ props }) => {
                   loading={isFetching}
                   items={usersData}
                   fields={[
-                    { key: 'phone', label: 'Số điện thoại' },
-                    { key: 'firstName', label: 'Họ và tên' },
+                    { key: 'mobilePhone', label: 'Số điện thoại' },
+                    { key: 'fullName', label: 'Họ và tên' },
                     { key: 'ssn', label: 'CMND/CCCD' },
                     { key: 'fullAddress', label: 'Địa chỉ nhà' },
                   ]}

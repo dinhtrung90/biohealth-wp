@@ -18,6 +18,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import QRCode from 'qrcode.react'
 import CIcon from '@coreui/icons-react'
+import { useFormik } from 'formik'
 import { FaMobileAlt } from 'react-icons/fa'
 import { YearPicker, MonthPicker, DayPicker } from 'react-dropdown-date-forked'
 import { userActions } from '../user.actions'
@@ -26,24 +27,20 @@ import 'react-datepicker/dist/react-datepicker.css'
 import vi from 'date-fns/locale/vi'
 registerLocale('vi', vi)
 
-const User = ({ props }) => {
+const User = ({ match }) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const account = useSelector((state) => state.users.account)
+  const user = useSelector((state) => state.users.user)
   const today = new Date()
-  const [birthDay, setBirthDay] = useState(today.getDate())
-  const [birthMonth, setBirthMonth] = useState(today.getMonth())
-  const [birthYear, setBirthYear] = useState(today.getFullYear())
   const [vaccinatedDate, setVaccinatedDate] = useState()
   const [testDate, setTestDate] = useState()
-
-  console.log('account=', account)
+  console.log('user=', user)
 
   const constGenders = {
     NONE: 'NONE',
-    MALE: 'Male',
-    FEMALE: 'Female',
-    UNKNOWN: 'Unknown',
+    MALE: 'MALE',
+    FEMALE: 'FEMALE',
+    UNKNOWN: 'UNKNOWN',
   }
 
   const roles = {
@@ -52,10 +49,43 @@ const User = ({ props }) => {
     USER: 'ROLE_USER',
   }
 
+  const loginRoles = {
+    ADMIN: 'ADMIN',
+    SUPPORT_USER: 'SUPPORT_USER',
+    USER: 'USER',
+  }
+
   const questions = [
     { title: 'Bạn chích ngừa covid chưa?', response: '' },
     { title: 'Lần test nhanh/PCR gần nhất', response: '' },
   ]
+
+  const isAdmin = (obj) => {
+    const role = obj && obj.basicInfo ? obj.basicInfo.login.toUpperCase() : 'USER'
+    return role === loginRoles.ADMIN
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      fullName: user && user.profile ? user.profile.fullName : '',
+      mobilePhone: user && user.profile ? user.profile.mobilePhone : '',
+      ssn: user && user.profile ? user.profile.ssn : '',
+      gender: user && user.profile ? user.profile.gender : '',
+      yearBirth:
+        user && user.profile ? new Date(user.profile.birthDate).getFullYear() : today.getFullYear(),
+      monthBirth:
+        user && user.profile ? new Date(user.profile.birthDate).getMonth() : today.getMonth(),
+      dayBirth: user && user.profile ? new Date(user.profile.birthDate).getDate() : today.getDate(),
+      role: user && user.basicInfo ? user.basicInfo.login.toUpperCase() : 'USER',
+      isAdmin: isAdmin(user),
+      addressLine1: '',
+      addressLine2: '',
+      city: '',
+      country: '',
+      zipCode: '',
+    },
+    enableReinitialize: true,
+  })
 
   const handleRadioVaccinatedChange = (e) => {
     if (e.target.id === 'radioVaccinatedYes') {
@@ -74,12 +104,12 @@ const User = ({ props }) => {
   }
 
   useEffect(() => {
-    dispatch(userActions.getAccount())
+    dispatch(userActions.getProfile({ userId: match.params.id }))
   }, [dispatch])
 
   return (
     <div>
-      <div className="body flex-grow-1 custom-user-container box-shadow-card ps-3">
+      <div className="body flex-grow-1 custom-main-container box-shadow-card ps-3">
         <CRow className="min-vh-100">
           <CCol sm="3" className="col-border-right pt-4">
             <CRow className="avatar-wrapper">
@@ -100,7 +130,7 @@ const User = ({ props }) => {
                   <QRCode value="http://facebook.github.io/react/" size={180} />
                   <div className="qr-text flex-center-items mt-2">
                     <FaMobileAlt size="2em" />
-                    <div>Scan Me</div>
+                    <div>Quét QR</div>
                   </div>
                 </div>
               </div>
@@ -114,19 +144,34 @@ const User = ({ props }) => {
               </CCol>
               <CCol sm="12" className="mb-4 pe-4">
                 <CFormLabel htmlFor="fullName">{t('common.FullName')}</CFormLabel>
-                <CFormControl id="fullName" placeholder={t('common.FullName')} />
+                <CFormControl
+                  id="fullName"
+                  value={formik.values.fullName}
+                  placeholder={t('common.FullName')}
+                  {...formik.getFieldProps('fullName')}
+                />
               </CCol>
               <CCol sm="12" className="mb-4 pe-4">
                 <CFormLabel htmlFor="mobilePhone">{t('common.MobilePhone')}</CFormLabel>
-                <CFormControl id="mobilePhone" placeholder={t('common.MobilePhone')} />
+                <CFormControl
+                  id="mobilePhone"
+                  placeholder={t('common.MobilePhone')}
+                  value={formik.values.mobilePhone}
+                  {...formik.getFieldProps('mobilePhone')}
+                />
               </CCol>
               <CCol sm="12" className="mb-4 pe-4">
                 <CFormLabel htmlFor="ssn">{t('common.SSN')}</CFormLabel>
-                <CFormControl id="ssn" placeholder={t('common.SSN')} />
+                <CFormControl
+                  id="ssn"
+                  placeholder={t('common.SSN')}
+                  value={formik.values.ssn}
+                  {...formik.getFieldProps('ssn')}
+                />
               </CCol>
               <CCol sm="12" className="mb-4 pe-4">
                 <CFormLabel htmlFor="gender">{t('common.Gender')}</CFormLabel>
-                <CFormSelect name="Gender" id="Gender">
+                <CFormSelect name="Gender" id="Gender" {...formik.getFieldProps('gender')}>
                   <option value={constGenders.NONE}>Chọn giới tính</option>
                   <option value={constGenders.MALE}>Nam</option>
                   <option value={constGenders.FEMALE}>Nữ</option>
@@ -143,18 +188,13 @@ const User = ({ props }) => {
                     <div className="custom-drop-date-label mb-2">{t('common.Day')}</div>
                     <div className="clr-select-wrapper">
                       <DayPicker
-                        year={birthYear} // mandatory
-                        month={birthMonth} // mandatory
+                        year={formik.values.yearBirth} // mandatory
+                        month={formik.values.monthBirth} // mandatory
                         endYearGiven // mandatory if end={} is given in YearPicker
-                        value={birthDay} // mandatory
+                        value={formik.values.dayBirth} // mandatory
                         onChange={(day) => {
                           // mandatory
-                          setBirthDay(day)
-                          console.log('=== day===')
-                          console.log(day)
-                          console.log(birthMonth)
-                          console.log(birthYear)
-                          console.log('=== end day===')
+                          formik.setFieldValue('dayBirth', day)
                         }}
                         id={'day'}
                         name={'day'}
@@ -171,13 +211,12 @@ const User = ({ props }) => {
                         short // default is full name
                         caps // default is Titlecase
                         endYearGiven // mandatory if end={} is given in YearPicker
-                        year={birthYear} // mandatory
-                        value={birthMonth} // mandatory
+                        year={formik.values.yearBirth} // mandatory
+                        value={formik.values.monthBirth} // mandatory
                         onChange={(month) => {
                           // mandatory
-                          setBirthMonth(month)
-                          setBirthDay(1)
-                          console.log(month)
+                          formik.setFieldValue('monthBirth', month)
+                          formik.setFieldValue('dayBirth', 1)
                         }}
                         id={'month'}
                         name={'month'}
@@ -191,11 +230,10 @@ const User = ({ props }) => {
                     <div className="clr-select-wrapper">
                       <YearPicker
                         reverse // default is ASCENDING
-                        value={birthYear}
+                        value={formik.values.yearBirth}
                         onChange={(year) => {
                           // mandatory
-                          setBirthYear(year)
-                          console.log(year)
+                          formik.setFieldValue('yearBirth', year)
                         }}
                         id={'year'}
                         name={'year'}
@@ -305,16 +343,18 @@ const User = ({ props }) => {
             <CCol sm="12">
               <hr />
             </CCol>
-            <CCol sm="12">
-              <CFormLabel>
-                <strong>{t('common.UserPermission')}</strong>
-              </CFormLabel>
-              <CFormSelect name="userRoles" id="userRoles">
-                <option value={roles.ADMIN}>Quản trị viên</option>
-                <option value={roles.SUPPORT_USER}>Hỗ trợ người dùng</option>
-                <option value={roles.USER}>Người dùng</option>
-              </CFormSelect>
-            </CCol>
+            {formik.values.isAdmin ? (
+              <CCol sm="12">
+                <CFormLabel>
+                  <strong>{t('common.UserPermission')}</strong>
+                </CFormLabel>
+                <CFormSelect name="userRoles" id="userRoles">
+                  <option value={roles.ADMIN}>Quản trị viên</option>
+                  <option value={roles.SUPPORT_USER}>Hỗ trợ người dùng</option>
+                  <option value={roles.USER}>Người dùng</option>
+                </CFormSelect>
+              </CCol>
+            ) : null}
             <CCol sm="12">
               <hr />
             </CCol>

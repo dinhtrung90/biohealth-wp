@@ -49,6 +49,21 @@ const userReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         errorFetch: action.error,
       })
+    case t.USER_PROFILE_GET_ALL_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case t.USER_PROFILE_GET_ALL_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+        users: action.response.data,
+        totalPages: Math.ceil(action.response.headers['x-total-count'] / state.itemsPerPage),
+      })
+    case t.USER_PROFILE_GET_ALL_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
     case t.USER_GET_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,

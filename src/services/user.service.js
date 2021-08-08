@@ -16,8 +16,16 @@ const getAllUsers = (data) => {
   return axios.get(BASE_URL + `/api/admin/users?page=${data.page}&size=${data.size}`)
 }
 
+const getAllProfileUsers = (data) => {
+  if (data && data.all) {
+    return axios.get(BASE_URL + `/api/user-profiles`)
+  }
+  return axios.get(BASE_URL + `/api/user-profiles?page=${data.page}&size=${data.size}`)
+}
+
 export const userService = {
   getAccount,
   getAllUsers,
   getProfileById,
+  getAllProfileUsers,
 }
