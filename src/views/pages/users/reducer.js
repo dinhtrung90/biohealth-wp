@@ -54,10 +54,12 @@ const userReducer = (state = initialState, action) => {
         isFetching: true,
       })
     case t.USER_PROFILE_GET_ALL_SUCCESS:
+      const logginedUserId = JSON.parse(localStorage.getItem(APP_USER)).userId
+      const users = action.response.data.filter((u) => u.user.id !== logginedUserId)
       return Object.assign({}, state, {
         isFetching: false,
         isFetched: true,
-        users: action.response.data,
+        users: users,
         totalPages: Math.ceil(action.response.headers['x-total-count'] / state.itemsPerPage),
       })
     case t.USER_PROFILE_GET_ALL_FAILURE:

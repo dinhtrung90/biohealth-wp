@@ -64,7 +64,7 @@ const ManageUsers = ({ props }) => {
 
   const onRowClick = (item) => {
     console.log('onRowClick=', item)
-    history.push(`/profile/${item.id}`)
+    history.push(`/profile/${item.user.id}`)
     // dispatch(userActions.getPublicEligibilityDetail(item)).then((r) => {
     //   setRewardPopup(!rewardPopup)
     // })
