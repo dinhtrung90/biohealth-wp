@@ -66,7 +66,7 @@ const Quarter = ({ props }) => {
   }
 
   const onQuarterKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && e.target.value.length > 0) {
       quarterTree.push({ title: e.target.value, uuid: uuid() })
       _updateQuarterTree(quarterTree)
       e.target.value = ''
@@ -75,6 +75,7 @@ const Quarter = ({ props }) => {
   }
 
   const onAddQuarterClicked = () => {
+    if (!quarterInput || quarterInput.length === 0) return
     quarterTree.push({ title: quarterInput, uuid: uuid() })
     _updateQuarterTree(quarterTree)
     setQuarterInput('')
