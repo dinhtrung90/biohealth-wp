@@ -14,27 +14,39 @@ import {
   CInputGroupText,
   CRow,
   CFormSelect,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
 } from '@coreui/react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'qrcode.react'
 import CIcon from '@coreui/icons-react'
 import { useFormik } from 'formik'
-import { FaMobileAlt } from 'react-icons/fa'
+import { FaMobileAlt, FaMapMarkerAlt } from 'react-icons/fa'
 import { YearPicker, MonthPicker, DayPicker } from 'react-dropdown-date-forked'
 import { userActions } from '../user.actions'
+import { quarterActions } from '../../quarter/quarter.actions'
 import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import vi from 'date-fns/locale/vi'
+import Select from 'react-select'
+
 registerLocale('vi', vi)
 
 const User = ({ match }) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.users.user)
+  const provinces = useSelector((state) => state.quarter.provinces)
+  const districts = useSelector((state) => state.quarter.districts)
+  const wards = useSelector((state) => state.quarter.wards)
   const today = new Date()
   const [vaccinatedDate, setVaccinatedDate] = useState()
   const [testDate, setTestDate] = useState()
-  console.log('user=', user)
+  const [isEditAddress, setEditAddress] = useState(false)
+  const [selectedAddress, setSelectedAddress] = useState(null)
 
   const constGenders = {
     NONE: 'NONE',
@@ -78,6 +90,7 @@ const User = ({ match }) => {
       dayBirth: user && user.profile ? new Date(user.profile.birthDate).getDate() : today.getDate(),
       role: user && user.basicInfo ? user.basicInfo.login.toUpperCase() : 'USER',
       isAdmin: isAdmin(user),
+      addressList: user && user.addresses ? user.addresses : [],
       addressLine1: '',
       addressLine2: '',
       city: '',
@@ -107,6 +120,140 @@ const User = ({ match }) => {
     dispatch(userActions.getProfile({ userId: match.params.id }))
   }, [dispatch])
 
+  const getAddressName = (item) => {
+    if (item.isPermanent) {
+      return 'Địa chỉ thường trú: '
+    } else if (item.isCurrent) {
+      return 'Địa chỉ hiện tại: '
+    }
+  }
+
+  const renderAddressList = (item, index) => {
+    return (
+      <div key={index} className="address-item">
+        <div className="address-info">
+          <div>{getAddressName(item)}</div>
+          <div>
+            <span>{item.quarter && item.quarter.length > 0 ? `${item.quarter}, ` : ''}</span>
+            <span>
+              {item.fullAddress && item.fullAddress.length > 0 ? `${item.fullAddress}, ` : ''}
+            </span>
+            <span>{item.ward && item.ward.length > 0 ? `${item.ward}, ` : ''}</span>
+            <span>{item.dictrict && item.dictrict.length > 0 ? `${item.dictrict}, ` : ''}</span>
+            <span>{item.city && item.city.length > 0 ? `${item.city}` : ''}</span>
+          </div>
+        </div>
+        <div className="address-action">
+          <CButton
+            onClick={() => {
+              setSelectedAddress(item)
+              setEditAddress(true)
+            }}
+          >
+            Edit
+          </CButton>
+        </div>
+      </div>
+    )
+  }
+
+  const onProvinceChange = (option) => {
+    dispatch(quarterActions.getAllDistrictsByProvince(option))
+  }
+
+  const onDistrictChange = (option) => {
+    dispatch(quarterActions.getAllWardsByDistrict(option))
+  }
+
+  const onWardChange = (option) => {
+    console.log('onWardChange =', option)
+  }
+
+  const modalUpdateAddress = () => {
+    if (selectedAddress && (!provinces || provinces.length === 0)) {
+      dispatch(quarterActions.getAllProvinces())
+      dispatch(quarterActions.getAllDistrictsByProvince(selectedAddress.provinceEntity))
+      dispatch(quarterActions.getAllWardsByDistrict(selectedAddress.district))
+    }
+
+    return selectedAddress ? (
+      <CModal visible={isEditAddress} onClose={() => setEditAddress(!isEditAddress)}>
+        <CModalHeader closeButton>
+          <CModalTitle>Chỉnh sửa địa chỉ</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CRow>
+            <CCol sm="12" className="mb-4 pe-4">
+              <CFormLabel htmlFor="QuarterGroup">{t('common.Quarter_Group')}</CFormLabel>
+              <CFormControl
+                id="QuarterGroup"
+                placeholder={t('common.Quarter_Group')}
+                value={selectedAddress.quarter}
+                disabled={!formik.values.isAdmin}
+              />
+            </CCol>
+            <CCol sm="12" className="mb-4 pe-4">
+              <CFormLabel htmlFor="fullAddressInput">Địa chỉ nhà</CFormLabel>
+              <CFormControl
+                id="fullAddressInput"
+                placeholder="Nhập địa chỉ nhà"
+                value={selectedAddress.fullAddress}
+              />
+            </CCol>
+            <CCol sm="12" className="mb-4 pe-4">
+              <CFormLabel htmlFor="wardInput">Phường</CFormLabel>
+              <Select
+                placeholder={<div>Chọn Phường</div>}
+                options={wards}
+                name="ward-select"
+                classNamePrefix="select"
+                value={{
+                  value: selectedAddress.wardEntity.id,
+                  label: selectedAddress.wardEntity.name,
+                }}
+                onChange={onWardChange}
+              />
+            </CCol>
+            <CCol sm="12" className="mb-4 pe-4">
+              <CFormLabel htmlFor="districtInput">Quận</CFormLabel>
+              <Select
+                placeholder={<div>Chọn Quận</div>}
+                options={districts}
+                name="district-select"
+                classNamePrefix="select"
+                value={{
+                  value: selectedAddress.district.id,
+                  label: selectedAddress.district.name,
+                }}
+                onChange={onDistrictChange}
+              />
+            </CCol>
+            <CCol sm="12" className="mb-4 pe-4">
+              <CFormLabel htmlFor="districtInput">Tỉnh / Thành phố</CFormLabel>
+              <Select
+                placeholder={<div>Chọn Tỉnh</div>}
+                options={provinces}
+                name="province-select"
+                classNamePrefix="select"
+                value={{
+                  value: selectedAddress.provinceEntity.id,
+                  label: selectedAddress.provinceEntity.name,
+                }}
+                onChange={onProvinceChange}
+              />
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter>
+          <CButton className="me-4">{t('common.Save')}</CButton>
+          <CButton color="secondary" onClick={() => setEditAddress(!isEditAddress)}>
+            {t('common.Cancel')}
+          </CButton>
+        </CModalFooter>
+      </CModal>
+    ) : null
+  }
+
   return (
     <div>
       <div className="body flex-grow-1 custom-main-container box-shadow-card ps-3">
@@ -121,10 +268,10 @@ const User = ({ match }) => {
                   <img src="https://via.placeholder.com/150" />
                 </div>
               </div>
-              <p className="text-center mt-4">{t('common.FullName')}</p>
-              <div className="flex-center mt-4">
-                <CButton>{t('common.UploadNewAvatar')}</CButton>
-              </div>
+              <p className="text-center mt-4">{formik.values.fullName}</p>
+              {/*<div className="flex-center mt-4">*/}
+              {/*  <CButton>{t('common.UploadNewAvatar')}</CButton>*/}
+              {/*</div>*/}
               <div className="flex-center qr-container mt-4">
                 <div className="qr-content">
                   <QRCode value="http://facebook.github.io/react/" size={180} />
@@ -248,12 +395,15 @@ const User = ({ match }) => {
                 <hr />
               </CCol>
               <CCol sm="12" className="mb-4 pe-4">
-                <CFormLabel htmlFor="QuarterGroup">{t('common.Quarter_Group')}</CFormLabel>
-                <CFormControl id="QuarterGroup" placeholder={t('common.Quarter_Group')} />
-              </CCol>
-              <CCol sm="12" className="mb-4 pe-4">
-                <CFormLabel htmlFor="fullAddress">{t('common.FullAddress')}</CFormLabel>
-                <CFormControl id="fullAddress" placeholder={t('common.FullAddress')} />
+                <CFormLabel htmlFor="gender">
+                  <FaMapMarkerAlt /> Sổ địa chỉ:
+                </CFormLabel>
+                {formik.values.addressList.map((item, index) => (
+                  <div key={index} className="address-item-wraper">
+                    {renderAddressList(item, index)}
+                  </div>
+                ))}
+                {modalUpdateAddress()}
               </CCol>
               <CCol sm="12">
                 <hr />
@@ -344,7 +494,7 @@ const User = ({ match }) => {
               <hr />
             </CCol>
             {formik.values.isAdmin ? (
-              <CCol sm="12">
+              <CCol sm="12" style={{ 'padding-right': '38px' }}>
                 <CFormLabel>
                   <strong>{t('common.UserPermission')}</strong>
                 </CFormLabel>
@@ -376,6 +526,7 @@ const User = ({ match }) => {
                       id="MobileNumberQuarter"
                       name="MobileNumberQuarter"
                       placeholder="SĐT tổ trường"
+                      disabled={!formik.values.isAdmin}
                     />
                   </CInputGroup>
                 </CCol>
@@ -392,6 +543,7 @@ const User = ({ match }) => {
                       id="MobileNumberWard"
                       name="MobileNumberWard"
                       placeholder="SĐT Phường"
+                      disabled={!formik.values.isAdmin}
                     />
                   </CInputGroup>
                 </CCol>
@@ -408,6 +560,7 @@ const User = ({ match }) => {
                       id="MobileNumberWardPolice"
                       name="MobileNumberWardPolice"
                       placeholder="SĐT công an Phường"
+                      disabled={!formik.values.isAdmin}
                     />
                   </CInputGroup>
                 </CCol>
@@ -424,6 +577,7 @@ const User = ({ match }) => {
                       id="MobileNumberWardHealth"
                       name="MobileNumberWardHealth"
                       placeholder="SĐT Y tế Phường"
+                      disabled={!formik.values.isAdmin}
                     />
                   </CInputGroup>
                 </CCol>
@@ -440,6 +594,7 @@ const User = ({ match }) => {
                       id="MobileNumberWardHealth"
                       name="MobileNumberWardHealth"
                       placeholder="SĐT Lực lượng phòng dịch"
+                      disabled={!formik.values.isAdmin}
                     />
                   </CInputGroup>
                 </CCol>

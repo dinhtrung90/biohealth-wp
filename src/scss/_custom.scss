@@ -230,3 +230,11 @@
     opacity:1;
   }
 }
+
+.address-item-wraper {
+  .address-item {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
