@@ -316,12 +316,14 @@ const User = ({ match }) => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <CButton className="me-4" onClick={handleUserAddressSubmit}>
-            {t('common.Save')}
-          </CButton>
-          <CButton color="secondary" onClick={() => setEditAddress(!isEditAddress)}>
+          <CButton
+            className="me-4"
+            color="secondary"
+            onClick={() => setEditAddress(!isEditAddress)}
+          >
             {t('common.Cancel')}
           </CButton>
+          <CButton onClick={handleUserAddressSubmit}>{t('common.Save')}</CButton>
         </CModalFooter>
       </CModal>
     )

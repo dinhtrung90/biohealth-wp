@@ -1,34 +1,130 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   CAvatar,
-  CBadge,
+  CButton,
+  CCol,
   CDropdown,
   CDropdownDivider,
   CDropdownHeader,
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CFormControl,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+  CRow,
+  CInputGroup,
+  CInputGroupText,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useTranslation } from 'react-i18next'
 import { APP_TOKEN, APP_USER } from 'src/constants/constants'
 import { useHistory } from 'react-router-dom'
-import { FaRegUser } from 'react-icons/fa'
-import { useSelector } from 'react-redux'
+import { FaRegUser, FaLock, FaRegEyeSlash, FaRegEye } from 'react-icons/fa'
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
 
 const AppHeaderDropdown = () => {
   const { t } = useTranslation()
   const history = useHistory()
+  const [isChangePassword, setIsChangePassword] = useState(false)
+  const [isRevealPwd, setIsRevealPwd] = useState(false)
+  const [isRevealPwdConfirm, setIsRevealPwdConfirm] = useState(false)
+
   let account = {}
   const accountStorage = localStorage.getItem(APP_USER)
   if (accountStorage && accountStorage.length > 0) {
     account = JSON.parse(accountStorage)
   }
 
+  const formik = useFormik({
+    initialValues: {
+      currentPassword: '',
+      showCurrentPassword: false,
+      newPassword: '',
+      showNewPassword: false,
+      newPasswordConfirm: '',
+    },
+    enableReinitialize: true,
+  })
+
   const handleLogout = () => {
     localStorage.removeItem(APP_TOKEN)
     localStorage.removeItem(APP_USER)
     history.push('/login')
+  }
+
+  const modalChangePassword = () => {
+    return (
+      <CModal visible={isChangePassword} onClose={() => setIsChangePassword(!isChangePassword)}>
+        <CModalHeader>
+          <CModalTitle>Đổi mật khẩu</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CRow className="mb-3">
+            <CCol>Mật khẩu hiện tại</CCol>
+            <CCol>
+              <CInputGroup>
+                <CFormControl
+                  id="currentPassword"
+                  name="currentPassword"
+                  type={isRevealPwd ? 'text' : 'password'}
+                  value={formik.values.currentPassword}
+                  {...formik.getFieldProps('currentPassword')}
+                />
+                <CInputGroupText onClick={() => setIsRevealPwd((isRevealPwd) => !isRevealPwd)}>
+                  {isRevealPwd ? <FaRegEyeSlash /> : <FaRegEye />}
+                </CInputGroupText>
+              </CInputGroup>
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CCol>Mật khẩu mới</CCol>
+            <CCol>
+              <CInputGroup>
+                <CFormControl
+                  id="newPassword"
+                  name="newPassword"
+                  type={isRevealPwdConfirm ? 'text' : 'password'}
+                  value={formik.values.newPassword}
+                  {...formik.getFieldProps('newPassword')}
+                />
+                <CInputGroupText
+                  onClick={() => setIsRevealPwdConfirm((isRevealPwdConfirm) => !isRevealPwdConfirm)}
+                >
+                  {isRevealPwdConfirm ? <FaRegEyeSlash /> : <FaRegEye />}
+                </CInputGroupText>
+              </CInputGroup>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol>Nhập lại mật khẩu mới</CCol>
+            <CCol>
+              <CFormControl
+                id="newPasswordConfirm"
+                name="newPasswordConfirm"
+                type="password"
+                value={formik.values.newPasswordConfirm}
+                {...formik.getFieldProps('newPasswordConfirm')}
+              />
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter>
+          <CButton
+            className="me-4"
+            color="secondary"
+            onClick={() => setIsChangePassword(!isChangePassword)}
+          >
+            {t('common.Cancel')}
+          </CButton>
+          <CButton>{t('common.Save')}</CButton>
+        </CModalFooter>
+      </CModal>
+    )
   }
 
   return (
@@ -40,6 +136,9 @@ const AppHeaderDropdown = () => {
         <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
         <CDropdownItem href={`#/profile/${account.userId}`}>
           <FaRegUser /> {t('common.Profile')}
+        </CDropdownItem>
+        <CDropdownItem onClick={() => setIsChangePassword(true)}>
+          <FaLock /> Đổi mật khẩu
         </CDropdownItem>
         {/*<CDropdownItem href="#">*/}
         {/*  <CIcon name="cil-envelope-open" className="me-2" />*/}
@@ -91,6 +190,7 @@ const AppHeaderDropdown = () => {
           {t('common.Logout')}
         </CDropdownItem>
       </CDropdownMenu>
+      {modalChangePassword()}
     </CDropdown>
   )
 }
