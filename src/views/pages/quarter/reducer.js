@@ -28,6 +28,8 @@ const userReducer = (state = initialState, action) => {
         isFetching: false,
         isFetched: true,
         provinces: action.provinces,
+        districts: [],
+        wards: [],
       })
     case t.PROVINCE_GET_ALL_FAILURE:
       return Object.assign({}, state, {
@@ -46,6 +48,7 @@ const userReducer = (state = initialState, action) => {
         isFetching: false,
         isFetched: true,
         districts: action.districts,
+        wards: [],
       })
     case t.DISTRICT_GET_ALL_FAILURE:
       return Object.assign({}, state, {

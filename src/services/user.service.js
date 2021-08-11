@@ -23,7 +23,12 @@ const getAllProfileUsers = (data) => {
   return axios.get(BASE_URL + `/api/user-profiles?page=${data.page}&size=${data.size}`)
 }
 
+const addOrUpdateUserAddresses = (data) => {
+  return axios.post(BASE_URL + `/api/user-addresses`, data)
+}
+
 export const userService = {
+  addOrUpdateUserAddresses,
   getAccount,
   getAllUsers,
   getProfileById,

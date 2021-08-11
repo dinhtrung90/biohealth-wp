@@ -24,7 +24,7 @@ import { useTranslation } from 'react-i18next'
 import QRCode from 'qrcode.react'
 import CIcon from '@coreui/icons-react'
 import { useFormik } from 'formik'
-import { FaMobileAlt, FaMapMarkerAlt } from 'react-icons/fa'
+import { FaMobileAlt, FaMapMarkerAlt, FaPlus } from 'react-icons/fa'
 import { YearPicker, MonthPicker, DayPicker } from 'react-dropdown-date-forked'
 import { userActions } from '../user.actions'
 import { quarterActions } from '../../quarter/quarter.actions'
@@ -47,6 +47,8 @@ const User = ({ match }) => {
   const [testDate, setTestDate] = useState()
   const [isEditAddress, setEditAddress] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState(null)
+  const [isPermanentAddress, setIsPermanentAddress] = useState(false)
+  const [isCurrentAddress, setIsCurrentAddress] = useState(false)
 
   const constGenders = {
     NONE: 'NONE',
@@ -126,6 +128,7 @@ const User = ({ match }) => {
     } else if (item.isCurrent) {
       return 'Địa chỉ hiện tại: '
     }
+    return 'Địa chỉ liên lạc:'
   }
 
   const renderAddressList = (item, index) => {
@@ -138,9 +141,9 @@ const User = ({ match }) => {
             <span>
               {item.fullAddress && item.fullAddress.length > 0 ? `${item.fullAddress}, ` : ''}
             </span>
-            <span>{item.ward && item.ward.length > 0 ? `${item.ward}, ` : ''}</span>
-            <span>{item.dictrict && item.dictrict.length > 0 ? `${item.dictrict}, ` : ''}</span>
-            <span>{item.city && item.city.length > 0 ? `${item.city}` : ''}</span>
+            <span>{item.wardEntity ? `${item.wardEntity.name}, ` : ''}</span>
+            <span>{item.district ? `${item.district.name}, ` : ''}</span>
+            <span>{item.provinceEntity ? `${item.provinceEntity.name}` : ''}</span>
           </div>
         </div>
         <div className="address-action">
@@ -148,6 +151,8 @@ const User = ({ match }) => {
             onClick={() => {
               setSelectedAddress(item)
               setEditAddress(true)
+              setIsPermanentAddress(item.isPermanent)
+              setIsCurrentAddress(item.isCurrent)
             }}
           >
             Edit
@@ -157,28 +162,55 @@ const User = ({ match }) => {
     )
   }
 
+  const handleAddNewAddress = () => {
+    setSelectedAddress(null)
+    setEditAddress(true)
+  }
+
   const onProvinceChange = (option) => {
+    const updateAddress = Object.assign({}, selectedAddress)
+    updateAddress.provinceEntity = option
+    updateAddress.district = {}
+    updateAddress.wardEntity = {}
+    setSelectedAddress(updateAddress)
     dispatch(quarterActions.getAllDistrictsByProvince(option))
   }
 
   const onDistrictChange = (option) => {
+    const updateAddress = Object.assign({}, selectedAddress)
+    updateAddress.district = option
+    updateAddress.wardEntity = {}
+    setSelectedAddress(updateAddress)
     dispatch(quarterActions.getAllWardsByDistrict(option))
   }
 
   const onWardChange = (option) => {
-    console.log('onWardChange =', option)
+    const updateAddress = Object.assign({}, selectedAddress)
+    updateAddress.wardEntity = option
+    setSelectedAddress(updateAddress)
+  }
+
+  const handleUserAddressSubmit = (e) => {
+    e.preventDefault()
+    setEditAddress(!isEditAddress)
+    selectedAddress.isCurrent = isCurrentAddress
+    selectedAddress.isPermanent = isPermanentAddress
+    dispatch(userActions.addOrUpdateUserAddress(selectedAddress))
   }
 
   const modalUpdateAddress = () => {
-    if (selectedAddress && (!provinces || provinces.length === 0)) {
-      dispatch(quarterActions.getAllProvinces())
-      dispatch(quarterActions.getAllDistrictsByProvince(selectedAddress.provinceEntity))
-      dispatch(quarterActions.getAllWardsByDistrict(selectedAddress.district))
+    if (!provinces || provinces.length === 0) {
+      dispatch(quarterActions.getAllProvinces()).then(() => {
+        if (!selectedAddress || !selectedAddress.provinceEntity || !selectedAddress.district) return
+        dispatch(quarterActions.getAllDistrictsByProvince(selectedAddress.provinceEntity)).then(
+          dispatch(quarterActions.getAllWardsByDistrict(selectedAddress.district)),
+        )
+      })
     }
 
-    return selectedAddress ? (
+    return (
       <CModal visible={isEditAddress} onClose={() => setEditAddress(!isEditAddress)}>
-        <CModalHeader closeButton>
+        <CModalHeader>
           <CModalTitle>Chỉnh sửa địa chỉ</CModalTitle>
         </CModalHeader>
         <CModalBody>
@@ -188,7 +220,7 @@ const User = ({ match }) => {
               <CFormControl
                 id="QuarterGroup"
                 placeholder={t('common.Quarter_Group')}
-                value={selectedAddress.quarter}
+                value={selectedAddress ? selectedAddress.quarter : ''}
                 disabled={!formik.values.isAdmin}
               />
             </CCol>
@@ -197,7 +229,7 @@ const User = ({ match }) => {
               <CFormControl
                 id="fullAddressInput"
                 placeholder="Nhập địa chỉ nhà"
-                value={selectedAddress.fullAddress}
+                value={selectedAddress ? selectedAddress.fullAddress : ''}
               />
             </CCol>
             <CCol sm="12" className="mb-4 pe-4">
@@ -207,10 +239,14 @@ const User = ({ match }) => {
                 options={wards}
                 name="ward-select"
                 classNamePrefix="select"
-                value={{
-                  value: selectedAddress.wardEntity.id,
-                  label: selectedAddress.wardEntity.name,
-                }}
+                value={
+                  selectedAddress && selectedAddress.wardEntity
+                    ? {
+                        value: selectedAddress.wardEntity.id,
+                        label: selectedAddress.wardEntity.name,
+                      }
+                    : null
+                }
                 onChange={onWardChange}
               />
             </CCol>
@@ -221,10 +257,14 @@ const User = ({ match }) => {
                 options={districts}
                 name="district-select"
                 classNamePrefix="select"
-                value={{
-                  value: selectedAddress.district.id,
-                  label: selectedAddress.district.name,
-                }}
+                value={
+                  selectedAddress && selectedAddress.district
+                    ? {
+                        value: selectedAddress.district.id || null,
+                        label: selectedAddress.district.name || null,
+                      }
+                    : null
+                }
                 onChange={onDistrictChange}
               />
             </CCol>
@@ -235,23 +275,56 @@ const User = ({ match }) => {
                 options={provinces}
                 name="province-select"
                 classNamePrefix="select"
-                value={{
-                  value: selectedAddress.provinceEntity.id,
-                  label: selectedAddress.provinceEntity.name,
-                }}
+                value={
+                  selectedAddress && selectedAddress.provinceEntity
+                    ? {
+                        value: selectedAddress.provinceEntity.id,
+                        label: selectedAddress.provinceEntity.name,
+                      }
+                    : null
+                }
                 onChange={onProvinceChange}
+              />
+            </CCol>
+            <CCol sm="12" className="pe-4">
+              <CFormLabel htmlFor="QuarterGroup">Loại địa chỉ:</CFormLabel>
+            </CCol>
+            <CCol sm="6" className="mb-4 pe-4 flex-left">
+              <CFormLabel htmlFor="QuarterGroup">Hộ khẩu</CFormLabel>
+              <CFormCheck
+                switch
+                size="lg"
+                className={'mx-1'}
+                variant={'3d'}
+                color={'success'}
+                checked={isPermanentAddress}
+                onChange={() => setIsPermanentAddress(!isPermanentAddress)}
+              />
+            </CCol>
+            <CCol sm="6" className="mb-4 pe-4 flex-left">
+              <CFormLabel htmlFor="QuarterGroup">Thường trú</CFormLabel>
+              <CFormCheck
+                switch
+                size="lg"
+                className={'mx-1'}
+                variant={'3d'}
+                color={'success'}
+                checked={isCurrentAddress}
+                onChange={() => setIsCurrentAddress(!isCurrentAddress)}
               />
             </CCol>
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <CButton className="me-4">{t('common.Save')}</CButton>
+          <CButton className="me-4" onClick={handleUserAddressSubmit}>
+            {t('common.Save')}
+          </CButton>
           <CButton color="secondary" onClick={() => setEditAddress(!isEditAddress)}>
             {t('common.Cancel')}
           </CButton>
         </CModalFooter>
       </CModal>
-    ) : null
+    )
   }
 
   return (
@@ -395,9 +468,15 @@ const User = ({ match }) => {
                 <hr />
               </CCol>
               <CCol sm="12" className="mb-4 pe-4">
-                <CFormLabel htmlFor="gender">
-                  <FaMapMarkerAlt /> Sổ địa chỉ:
-                </CFormLabel>
+                <div className="flex-left">
+                  <CFormLabel htmlFor="gender">
+                    <FaMapMarkerAlt /> Sổ địa chỉ:
+                  </CFormLabel>
+                  <div className="address-plus-item ms-4" onClick={handleAddNewAddress}>
+                    <FaPlus className="me-1" />
+                    <span>Thêm địa chỉ mới</span>
+                  </div>
+                </div>
                 {formik.values.addressList.map((item, index) => (
                   <div key={index} className="address-item-wraper">
                     {renderAddressList(item, index)}
@@ -494,7 +573,7 @@ const User = ({ match }) => {
               <hr />
             </CCol>
             {formik.values.isAdmin ? (
-              <CCol sm="12" style={{ 'padding-right': '38px' }}>
+              <CCol sm="12" style={{ paddingRight: '38px' }}>
                 <CFormLabel>
                   <strong>{t('common.UserPermission')}</strong>
                 </CFormLabel>

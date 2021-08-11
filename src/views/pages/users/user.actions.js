@@ -1,5 +1,6 @@
 import api from '../../../utils/api'
 import * as t from './constant'
+import { ADD_UPDATE_USER_ADDRESSES_FAILURE } from './constant'
 
 function getAccount() {
   return (dispatch) => {
@@ -101,7 +102,32 @@ function getProfile(data) {
   }
 }
 
+function addOrUpdateUserAddress(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.userService
+      .addOrUpdateUserAddresses(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.ADD_UPDATE_USER_ADDRESSES_REQUEST }
+  }
+
+  function success(userAddress) {
+    return { type: t.ADD_UPDATE_USER_ADDRESSES_SUCCESS, userAddress }
+  }
+
+  function failure(error) {
+    return { type: t.ADD_UPDATE_USER_ADDRESSES_FAILURE, error }
+  }
+}
+
 export const userActions = {
+  addOrUpdateUserAddress,
   getAccount,
   getAllUsers,
   getAllProfileUsers,
