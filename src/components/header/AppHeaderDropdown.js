@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import {
   CAvatar,
   CButton,
@@ -18,6 +19,7 @@ import {
   CRow,
   CInputGroup,
   CInputGroupText,
+  CForm,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useTranslation } from 'react-i18next'
@@ -26,10 +28,12 @@ import { useHistory } from 'react-router-dom'
 import { FaRegUser, FaLock, FaRegEyeSlash, FaRegEye } from 'react-icons/fa'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
+import { accountActions } from '../../actions'
 
 const AppHeaderDropdown = () => {
   const { t } = useTranslation()
   const history = useHistory()
+  const dispatch = useDispatch()
   const [isChangePassword, setIsChangePassword] = useState(false)
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealPwdConfirm, setIsRevealPwdConfirm] = useState(false)
@@ -49,6 +53,11 @@ const AppHeaderDropdown = () => {
       newPasswordConfirm: '',
     },
     enableReinitialize: true,
+    onSubmit: (values) => {
+      dispatch(accountActions.updateChangePassword(values)).then(() => {
+        setIsChangePassword(false)
+      })
+    },
   })
 
   const handleLogout = () => {
@@ -60,69 +69,73 @@ const AppHeaderDropdown = () => {
   const modalChangePassword = () => {
     return (
       <CModal visible={isChangePassword} onClose={() => setIsChangePassword(!isChangePassword)}>
-        <CModalHeader>
-          <CModalTitle>Đổi mật khẩu</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CRow className="mb-3">
-            <CCol>Mật khẩu hiện tại</CCol>
-            <CCol>
-              <CInputGroup>
+        <CForm onSubmit={formik.handleSubmit}>
+          <CModalHeader>
+            <CModalTitle>Đổi mật khẩu</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CRow className="mb-3">
+              <CCol>Mật khẩu hiện tại</CCol>
+              <CCol>
+                <CInputGroup>
+                  <CFormControl
+                    id="currentPassword"
+                    name="currentPassword"
+                    type={isRevealPwd ? 'text' : 'password'}
+                    value={formik.values.currentPassword}
+                    {...formik.getFieldProps('currentPassword')}
+                  />
+                  <CInputGroupText onClick={() => setIsRevealPwd((isRevealPwd) => !isRevealPwd)}>
+                    {isRevealPwd ? <FaRegEyeSlash /> : <FaRegEye />}
+                  </CInputGroupText>
+                </CInputGroup>
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CCol>Mật khẩu mới</CCol>
+              <CCol>
+                <CInputGroup>
+                  <CFormControl
+                    id="newPassword"
+                    name="newPassword"
+                    type={isRevealPwdConfirm ? 'text' : 'password'}
+                    value={formik.values.newPassword}
+                    {...formik.getFieldProps('newPassword')}
+                  />
+                  <CInputGroupText
+                    onClick={() =>
+                      setIsRevealPwdConfirm((isRevealPwdConfirm) => !isRevealPwdConfirm)
+                    }
+                  >
+                    {isRevealPwdConfirm ? <FaRegEyeSlash /> : <FaRegEye />}
+                  </CInputGroupText>
+                </CInputGroup>
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol>Nhập lại mật khẩu mới</CCol>
+              <CCol>
                 <CFormControl
-                  id="currentPassword"
-                  name="currentPassword"
-                  type={isRevealPwd ? 'text' : 'password'}
-                  value={formik.values.currentPassword}
-                  {...formik.getFieldProps('currentPassword')}
+                  id="newPasswordConfirm"
+                  name="newPasswordConfirm"
+                  type="password"
+                  value={formik.values.newPasswordConfirm}
+                  {...formik.getFieldProps('newPasswordConfirm')}
                 />
-                <CInputGroupText onClick={() => setIsRevealPwd((isRevealPwd) => !isRevealPwd)}>
-                  {isRevealPwd ? <FaRegEyeSlash /> : <FaRegEye />}
-                </CInputGroupText>
-              </CInputGroup>
-            </CCol>
-          </CRow>
-          <CRow className="mb-3">
-            <CCol>Mật khẩu mới</CCol>
-            <CCol>
-              <CInputGroup>
-                <CFormControl
-                  id="newPassword"
-                  name="newPassword"
-                  type={isRevealPwdConfirm ? 'text' : 'password'}
-                  value={formik.values.newPassword}
-                  {...formik.getFieldProps('newPassword')}
-                />
-                <CInputGroupText
-                  onClick={() => setIsRevealPwdConfirm((isRevealPwdConfirm) => !isRevealPwdConfirm)}
-                >
-                  {isRevealPwdConfirm ? <FaRegEyeSlash /> : <FaRegEye />}
-                </CInputGroupText>
-              </CInputGroup>
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol>Nhập lại mật khẩu mới</CCol>
-            <CCol>
-              <CFormControl
-                id="newPasswordConfirm"
-                name="newPasswordConfirm"
-                type="password"
-                value={formik.values.newPasswordConfirm}
-                {...formik.getFieldProps('newPasswordConfirm')}
-              />
-            </CCol>
-          </CRow>
-        </CModalBody>
-        <CModalFooter>
-          <CButton
-            className="me-4"
-            color="secondary"
-            onClick={() => setIsChangePassword(!isChangePassword)}
-          >
-            {t('common.Cancel')}
-          </CButton>
-          <CButton>{t('common.Save')}</CButton>
-        </CModalFooter>
+              </CCol>
+            </CRow>
+          </CModalBody>
+          <CModalFooter>
+            <CButton
+              className="me-4"
+              color="secondary"
+              onClick={() => setIsChangePassword(!isChangePassword)}
+            >
+              {t('common.Cancel')}
+            </CButton>
+            <CButton type="submit">{t('common.Save')}</CButton>
+          </CModalFooter>
+        </CForm>
       </CModal>
     )
   }

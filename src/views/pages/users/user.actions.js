@@ -1,6 +1,5 @@
 import api from '../../../utils/api'
 import * as t from './constant'
-import { ADD_UPDATE_USER_ADDRESSES_FAILURE } from './constant'
 
 function getAccount() {
   return (dispatch) => {

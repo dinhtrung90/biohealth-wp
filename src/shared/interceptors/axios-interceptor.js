@@ -64,6 +64,8 @@ const setupAxiosInterceptors = (onUnauthenticated) => {
           }
         } else if (data !== '' && data.message) {
           addErrorAlert(data.message, data.message, data.params)
+        } else if (data && data.title && data.title.length > 0) {
+          addErrorAlert(data.title)
         } else {
           addErrorAlert(data)
         }

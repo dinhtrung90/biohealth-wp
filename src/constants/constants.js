@@ -8,6 +8,12 @@ export const alertConstants = {
   CLEAR: 'ALERT_CLEAR',
 }
 
+export const accountConstants = {
+  UPDATE_CHANGE_PASSWORD_REQUEST: 'UPDATE_CHANGE_PASSWORD_REQUEST',
+  UPDATE_CHANGE_PASSWORD_SUCCESS: 'UPDATE_CHANGE_PASSWORD_SUCCESS',
+  UPDATE_CHANGE_PASSWORD_FAILURE: 'UPDATE_CHANGE_PASSWORD_FAILURE',
+}
+
 export const DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN || ''
 
 export const BASE_URL = process.env.REACT_APP_API_ENDPOINT || 'https://api.elend.vn'
