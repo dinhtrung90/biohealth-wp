@@ -6,7 +6,7 @@ import {
   CSidebarBrand,
   CSidebarNav,
   CSidebarToggler,
-  CCreateNavItem,
+  // CCreateNavItem,
 } from '@coreui/react'
 
 import CIcon from '@coreui/icons-react'
@@ -39,7 +39,7 @@ const AppSidebar = () => {
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
-          <CCreateNavItem items={navigation} />
+          {/*<CCreateNavItem items={navigation} />*/}
         </SimpleBar>
       </CSidebarNav>
       <CSidebarToggler
