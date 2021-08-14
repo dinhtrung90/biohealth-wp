@@ -6,11 +6,11 @@ COPY .env.template ./.env
 COPY env.sh ./
 COPY package.json ./
 # COPY package-lock.json ./
-RUN npm install -g yarn --silent
+#RUN npm install -g yarn --silent
 #RUN npm install react-scripts@4.0.3 -g --silent
-RUN yarn install
+RUN ["yarn", "install"]
 COPY . ./
-RUN yarn build
+RUN ["yarn", "build"]
 
 # production environment
 FROM nginx:stable-alpine
