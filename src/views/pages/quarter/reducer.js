@@ -11,7 +11,13 @@ const initialState = {
   isFetchedQuarter: false,
   totalPages: 0,
   itemsPerPage: 10,
-  hotlinesByWard: [],
+  hotlinesByWard: {
+    districtHealthPhone: '',
+    mobileLeader: '',
+    wardHealthyPhone: '',
+    wardPhone: '',
+    wardPolice: '',
+  },
 }
 
 const userReducer = (state = initialState, action) => {
@@ -90,9 +96,31 @@ const userReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         isFetching: false,
         isFetched: true,
-        hotlinesByWard: action.hotlines && action.hotlines.length > 0 ? action.hotlines[0] : {},
+        hotlinesByWard:
+          action.hotlines && action.hotlines.length > 0
+            ? action.hotlines[0]
+            : {
+                districtHealthPhone: '',
+                mobileLeader: '',
+                wardHealthyPhone: '',
+                wardPhone: '',
+                wardPolice: '',
+              },
       })
     case t.HOTLINE_BY_WARD_GET_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
+    case t.CREATE_UPDATE_HOTLINE_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case t.CREATE_UPDATE_HOTLINE_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+      })
+    case t.CREATE_UPDATE_HOTLINE_FAILURE:
       return Object.assign({}, state, {
         errorFetch: action.error,
       })

@@ -35,19 +35,21 @@ const ModalHotlineInputs = (props) => {
   const provinces = useSelector((state) => state.quarter.provinces)
   const districts = useSelector((state) => state.quarter.districts)
   const wards = useSelector((state) => state.quarter.wards)
-  const hotlinesByWard = useSelector((state) => state.quarter.hotlinesByWard)
-
-  const [hotlineItem, setHotlineItem] = useState({
-    phoneQuarter: null,
-    phoneWard: null,
-    phoneWardPolice: null,
-    phoneWardHealth: null,
-    phoneDistrictPolice: null,
-  })
-
+  const hotlinesByWard = useSelector((state) => state.quarter.hotlinesByWard) || {
+    districtHealthPhone: '',
+    mobileLeader: '',
+    wardHealthyPhone: '',
+    wardPhone: '',
+    wardPolice: '',
+  }
   const [mProvince, setProvince] = useState(null)
   const [mDistrict, setDistrict] = useState(null)
   const [mWard, setWard] = useState(null)
+  const [mDistrictHealthPhone, setDistrictHealthPhone] = useState('')
+  const [mMobileLeader, setMobileLeader] = useState('')
+  const [mWardHealthyPhone, setWardHealthyPhone] = useState('')
+  const [mWardPhone, setWardPhone] = useState('')
+  const [mWardPolice, setWardPolice] = useState('')
 
   const onProvinceChange = (option) => {
     setProvince(option)
@@ -65,11 +67,77 @@ const ModalHotlineInputs = (props) => {
   }
 
   const onCloseModal = () => {
+    hotlinesByWard.districtHealthPhone = ''
+    hotlinesByWard.mobileLeader = ''
+    hotlinesByWard.wardHealthyPhone = ''
+    hotlinesByWard.wardPhone = ''
+    hotlinesByWard.wardPolice = ''
     setProvince(null)
     setDistrict(null)
     setWard(null)
+    setMobileLeader('')
+    setWardPhone('')
+    setWardPolice('')
+    setWardHealthyPhone('')
+    setDistrictHealthPhone('')
     onHidden(false)
   }
+
+  const handleSaveHotline = () => {
+    const payload = {
+      districtHealthPhone: mDistrictHealthPhone,
+      mobileLeader: mMobileLeader,
+      ward: {
+        district: {
+          id: mDistrict.id,
+          name: mDistrict.name,
+          province: {
+            id: mProvince.id,
+            name: mProvince.name,
+            type: mProvince.type,
+          },
+          type: mDistrict.type,
+        },
+        id: mWard.id,
+        name: mWard.name,
+        type: mWard.type,
+      },
+      wardHealthyPhone: mWardHealthyPhone,
+      wardPhone: mWardPhone,
+      wardPolice: mWardPolice,
+    }
+    if (hotlinesByWard.id) {
+      payload.id = hotlinesByWard.id
+    }
+    dispatch(quarterActions.addUpdateHotLines(payload))
+    onCloseModal()
+  }
+
+  useEffect(() => {
+    const mobileLeaderNumber =
+      !mMobileLeader || mMobileLeader.length === 0 ? hotlinesByWard?.mobileLeader : mMobileLeader
+    setMobileLeader(mobileLeaderNumber)
+
+    const districtHealthPhoneNumber =
+      !mDistrictHealthPhone || mDistrictHealthPhone.length === 0
+        ? hotlinesByWard?.districtHealthPhone
+        : mDistrictHealthPhone
+    setDistrictHealthPhone(districtHealthPhoneNumber)
+
+    const wardHealthyPhoneNumber =
+      !mWardHealthyPhone || mWardHealthyPhone.length === 0
+        ? hotlinesByWard?.wardHealthyPhone
+        : mWardHealthyPhone
+    setWardHealthyPhone(wardHealthyPhoneNumber)
+
+    const wardPhoneNumber =
+      !mWardPhone || mWardPhone.length === 0 ? hotlinesByWard?.wardPhone : mWardPhone
+    setWardPhone(wardPhoneNumber)
+
+    const wardPoliceNumber =
+      !mWardPolice || mWardPolice.length === 0 ? hotlinesByWard?.wardPolice : mWardPolice
+    setWardPolice(wardPoliceNumber)
+  })
 
   return (
     <CModal visible={showModal} size="xl">
@@ -125,7 +193,10 @@ const ModalHotlineInputs = (props) => {
                   id="MobileNumberQuarter"
                   name="MobileNumberQuarter"
                   placeholder="SĐT tổ trường"
-                  value={hotlinesByWard.mobileLeader}
+                  value={mMobileLeader}
+                  onChange={(e) => {
+                    setMobileLeader(e.target.value)
+                  }}
                 />
               </CInputGroup>
             </CCol>
@@ -142,7 +213,10 @@ const ModalHotlineInputs = (props) => {
                   id="MobileNumberWard"
                   name="MobileNumberWard"
                   placeholder="SĐT Phường"
-                  value={hotlinesByWard.wardPhone}
+                  value={mWardPhone}
+                  onChange={(e) => {
+                    setWardPhone(e.target.value)
+                  }}
                 />
               </CInputGroup>
             </CCol>
@@ -159,7 +233,10 @@ const ModalHotlineInputs = (props) => {
                   id="MobileNumberWardPolice"
                   name="MobileNumberWardPolice"
                   placeholder="SĐT công an Phường"
-                  value={hotlinesByWard.wardPolice}
+                  value={mWardPolice}
+                  onChange={(e) => {
+                    setWardPolice(e.target.value)
+                  }}
                 />
               </CInputGroup>
             </CCol>
@@ -176,7 +253,10 @@ const ModalHotlineInputs = (props) => {
                   id="MobileNumberWardHealth"
                   name="MobileNumberWardHealth"
                   placeholder="SĐT Y tế Phường"
-                  value={hotlinesByWard.wardHealthyPhone}
+                  value={mWardHealthyPhone}
+                  onChange={(e) => {
+                    setWardHealthyPhone(e.target.value)
+                  }}
                 />
               </CInputGroup>
             </CCol>
@@ -193,7 +273,10 @@ const ModalHotlineInputs = (props) => {
                   id="MobileNumberWardHealth"
                   name="MobileNumberWardHealth"
                   placeholder="SĐT Lực lượng phòng dịch"
-                  value={hotlinesByWard.districtHealthPhone}
+                  value={mDistrictHealthPhone}
+                  onChange={(e) => {
+                    setDistrictHealthPhone(e.target.value)
+                  }}
                 />
               </CInputGroup>
             </CCol>
@@ -203,7 +286,7 @@ const ModalHotlineInputs = (props) => {
           <CButton className="me-4" color="secondary" onClick={() => onCloseModal()}>
             {t('common.Cancel')}
           </CButton>
-          <CButton type="submit">{t('common.Save')}</CButton>
+          <CButton onClick={handleSaveHotline}>{t('common.Save')}</CButton>
         </CModalFooter>
       </CForm>
     </CModal>

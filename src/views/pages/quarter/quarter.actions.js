@@ -113,10 +113,35 @@ function getHotLinesByWard(wardId) {
   }
 }
 
+function addUpdateHotLines(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.provinceService
+      .addUpdateHotlines(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.CREATE_UPDATE_HOTLINE_REQUEST }
+  }
+
+  function success(hotlines) {
+    return { type: t.CREATE_UPDATE_HOTLINE_SUCCESS, hotlines }
+  }
+
+  function failure(error) {
+    return { type: t.CREATE_UPDATE_HOTLINE_FAILURE, error }
+  }
+}
+
 export const quarterActions = {
   getAllProvinces,
   getAllDistrictsByProvince,
   getAllWardsByDistrict,
   updateQuarterTree,
   getHotLinesByWard,
+  addUpdateHotLines,
 }
