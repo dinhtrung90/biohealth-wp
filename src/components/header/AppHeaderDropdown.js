@@ -20,6 +20,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CForm,
+  CFormFeedback,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useTranslation } from 'react-i18next'
@@ -44,6 +45,17 @@ const AppHeaderDropdown = () => {
     account = JSON.parse(accountStorage)
   }
 
+  const strongPasswordReg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
+  let schema = Yup.object({
+    currentPassword: Yup.string().required(t('messages.validations.passwordRequired')),
+    newPassword: Yup.string()
+      .matches(strongPasswordReg, t('messages.validations.passwordStrongRequired'))
+      .required(t('messages.validations.passwordRequired')),
+    newPasswordConfirm: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Mật khẩu không trùng')
+      .required(t('messages.validations.confirmPasswordRequired')),
+  })
+
   const formik = useFormik({
     initialValues: {
       currentPassword: '',
@@ -53,12 +65,16 @@ const AppHeaderDropdown = () => {
       newPasswordConfirm: '',
     },
     enableReinitialize: true,
-    onSubmit: (values) => {
-      dispatch(accountActions.updateChangePassword(values)).then(() => {
-        setIsChangePassword(false)
-      })
-    },
+    validationSchema: schema,
+    onSubmit: (values) => handleChangePasswordSubmit(values),
   })
+
+  const handleChangePasswordSubmit = (values) => {
+    dispatch(accountActions.updateChangePassword(values)).then(() => {
+      formik.resetForm()
+      setIsChangePassword(false)
+    })
+  }
 
   const handleLogout = () => {
     localStorage.removeItem(APP_TOKEN)
@@ -89,6 +105,17 @@ const AppHeaderDropdown = () => {
                     {isRevealPwd ? <FaRegEyeSlash /> : <FaRegEye />}
                   </CInputGroupText>
                 </CInputGroup>
+                <CFormFeedback
+                  invalid
+                  style={{
+                    display:
+                      formik.errors.currentPassword && formik.touched.currentPassword
+                        ? 'block'
+                        : 'none',
+                  }}
+                >
+                  {formik.errors.currentPassword}
+                </CFormFeedback>
               </CCol>
             </CRow>
             <CRow className="mb-3">
@@ -110,6 +137,15 @@ const AppHeaderDropdown = () => {
                     {isRevealPwdConfirm ? <FaRegEyeSlash /> : <FaRegEye />}
                   </CInputGroupText>
                 </CInputGroup>
+                <CFormFeedback
+                  invalid
+                  style={{
+                    display:
+                      formik.errors.newPassword && formik.touched.newPassword ? 'block' : 'none',
+                  }}
+                >
+                  {formik.errors.newPassword}
+                </CFormFeedback>
               </CCol>
             </CRow>
             <CRow>
@@ -122,6 +158,17 @@ const AppHeaderDropdown = () => {
                   value={formik.values.newPasswordConfirm}
                   {...formik.getFieldProps('newPasswordConfirm')}
                 />
+                <CFormFeedback
+                  invalid
+                  style={{
+                    display:
+                      formik.errors.newPasswordConfirm && formik.touched.newPasswordConfirm
+                        ? 'block'
+                        : 'none',
+                  }}
+                >
+                  {formik.errors.newPasswordConfirm}
+                </CFormFeedback>
               </CCol>
             </CRow>
           </CModalBody>
@@ -129,7 +176,10 @@ const AppHeaderDropdown = () => {
             <CButton
               className="me-4"
               color="secondary"
-              onClick={() => setIsChangePassword(!isChangePassword)}
+              onClick={() => {
+                formik.resetForm()
+                setIsChangePassword(!isChangePassword)
+              }}
             >
               {t('common.Cancel')}
             </CButton>

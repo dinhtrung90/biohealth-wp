@@ -11,6 +11,7 @@ const initialState = {
   isFetchedQuarter: false,
   totalPages: 0,
   itemsPerPage: 10,
+  hotlinesByWard: [],
 }
 
 const userReducer = (state = initialState, action) => {
@@ -80,6 +81,20 @@ const userReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         isFetchedQuarter: true,
         quarterTree: action.data,
+      })
+    case t.HOTLINE_BY_WARD_GET_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case t.HOTLINE_BY_WARD_GET_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+        hotlinesByWard: action.hotlines && action.hotlines.length > 0 ? action.hotlines[0] : {},
+      })
+    case t.HOTLINE_BY_WARD_GET_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
       })
     default:
       return state

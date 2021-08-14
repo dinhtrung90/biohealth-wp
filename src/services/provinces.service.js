@@ -71,6 +71,10 @@ const getWard = (id) => {
   return axios.get(BASE_URL + `/api/wards/${id}`)
 }
 
+const getHotlinesByWard = (wardId) => {
+  return axios.get(BASE_URL + `/api/hotlines?wardId.equals=${wardId}`)
+}
+
 export const provinceService = {
   // showAllDivisions,
   listProvinces,
@@ -82,4 +86,5 @@ export const provinceService = {
   listWards,
   // searchWards,
   getWard,
+  getHotlinesByWard,
 }
