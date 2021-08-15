@@ -99,6 +99,7 @@ const User = ({ match }) => {
       city: '',
       country: '',
       zipCode: '',
+      qrCode: user && user.profile ? user.profile.userCode : '',
     },
     enableReinitialize: true,
   })
@@ -350,7 +351,7 @@ const User = ({ match }) => {
               {/*</div>*/}
               <div className="flex-center qr-container mt-4">
                 <div className="qr-content">
-                  <QRCode value="http://facebook.github.io/react/" size={180} />
+                  <QRCode value={formik.values.qrCode} size={180} />
                   <div className="qr-text flex-center-items mt-2">
                     <FaMobileAlt size="2em" />
                     <div>Quét QR</div>
