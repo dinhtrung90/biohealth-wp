@@ -193,6 +193,7 @@ const User = ({ match }) => {
   }
 
   const handleUserAddressSubmit = (e) => {
+    if (!selectedAddress) return
     e.preventDefault()
     setEditAddress(!isEditAddress)
     selectedAddress.isCurrent = isCurrentAddress
@@ -200,6 +201,9 @@ const User = ({ match }) => {
     dispatch(userActions.addOrUpdateUserAddress(selectedAddress))
   }
 
+  /*
+   * Modal Address
+   */
   const modalUpdateAddress = () => {
     if (!provinces || provinces.length === 0) {
       dispatch(quarterActions.getAllProvinces()).then(() => {
@@ -218,38 +222,21 @@ const User = ({ match }) => {
         <CModalBody>
           <CRow>
             <CCol sm="12" className="mb-4 pe-4">
-              <CFormLabel htmlFor="QuarterGroup">{t('common.Quarter_Group')}</CFormLabel>
-              <CFormControl
-                id="QuarterGroup"
-                placeholder={t('common.Quarter_Group')}
-                value={selectedAddress ? selectedAddress.quarter : ''}
-                disabled={!formik.values.isAdmin}
-              />
-            </CCol>
-            <CCol sm="12" className="mb-4 pe-4">
-              <CFormLabel htmlFor="fullAddressInput">Địa chỉ nhà</CFormLabel>
-              <CFormControl
-                id="fullAddressInput"
-                placeholder="Nhập địa chỉ nhà"
-                value={selectedAddress ? selectedAddress.fullAddress : ''}
-              />
-            </CCol>
-            <CCol sm="12" className="mb-4 pe-4">
-              <CFormLabel htmlFor="wardInput">Phường</CFormLabel>
+              <CFormLabel htmlFor="districtInput">Tỉnh / Thành phố</CFormLabel>
               <Select
-                placeholder={<div>Chọn Phường</div>}
-                options={wards}
-                name="ward-select"
+                placeholder={<div>Chọn Tỉnh</div>}
+                options={provinces}
+                name="province-select"
                 classNamePrefix="select"
                 value={
-                  selectedAddress && selectedAddress.wardEntity
+                  selectedAddress && selectedAddress.provinceEntity
                     ? {
-                        value: selectedAddress.wardEntity.id,
-                        label: selectedAddress.wardEntity.name,
+                        value: selectedAddress.provinceEntity.id,
+                        label: selectedAddress.provinceEntity.name,
                       }
                     : null
                 }
-                onChange={onWardChange}
+                onChange={onProvinceChange}
               />
             </CCol>
             <CCol sm="12" className="mb-4 pe-4">
@@ -271,21 +258,39 @@ const User = ({ match }) => {
               />
             </CCol>
             <CCol sm="12" className="mb-4 pe-4">
-              <CFormLabel htmlFor="districtInput">Tỉnh / Thành phố</CFormLabel>
+              <CFormLabel htmlFor="wardInput">Phường</CFormLabel>
               <Select
-                placeholder={<div>Chọn Tỉnh</div>}
-                options={provinces}
-                name="province-select"
+                placeholder={<div>Chọn Phường</div>}
+                options={wards}
+                name="ward-select"
                 classNamePrefix="select"
                 value={
-                  selectedAddress && selectedAddress.provinceEntity
+                  selectedAddress && selectedAddress.wardEntity
                     ? {
-                        value: selectedAddress.provinceEntity.id,
-                        label: selectedAddress.provinceEntity.name,
+                        value: selectedAddress.wardEntity.id,
+                        label: selectedAddress.wardEntity.name,
                       }
                     : null
                 }
-                onChange={onProvinceChange}
+                onChange={onWardChange}
+              />
+            </CCol>
+            <CCol sm="12" className="mb-4 pe-4">
+              <CFormLabel htmlFor="fullAddressInput">Địa chỉ nhà</CFormLabel>
+              <CFormControl
+                id="fullAddressInput"
+                placeholder="Nhập địa chỉ nhà"
+                value={selectedAddress ? selectedAddress.fullAddress : ''}
+                disabled={selectedAddress === null}
+              />
+            </CCol>
+            <CCol sm="12" className="mb-4 pe-4">
+              <CFormLabel htmlFor="QuarterGroup">{t('common.Quarter_Group')}</CFormLabel>
+              <CFormControl
+                id="QuarterGroup"
+                placeholder={t('common.Quarter_Group')}
+                value={selectedAddress ? selectedAddress.quarter : ''}
+                disabled={!formik.values.isAdmin}
               />
             </CCol>
             <CCol sm="12" className="pe-4">
