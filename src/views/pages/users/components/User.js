@@ -341,7 +341,7 @@ const User = ({ match }) => {
               </CCol>
               <div className="avatar-circle-1">
                 <div className="image-cropper">
-                  <img src="https://via.placeholder.com/150" />
+                  <img src="/avatars/avatar.svg" height="150px" width="150px" />
                 </div>
               </div>
               <p className="text-center mt-4">{formik.values.fullName}</p>
