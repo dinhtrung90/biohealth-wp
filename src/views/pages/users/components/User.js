@@ -33,6 +33,7 @@ import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import vi from 'date-fns/locale/vi'
 import Select from 'react-select'
+import { APP_USER } from '../../../../constants'
 
 registerLocale('vi', vi)
 
@@ -48,6 +49,7 @@ const User = ({ match }) => {
   const [testDate, setTestDate] = useState()
   const [isEditAddress, setEditAddress] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState(null)
+  const [fullAddress, setFullAddress] = useState('')
   const [isPermanentAddress, setIsPermanentAddress] = useState(false)
   const [isCurrentAddress, setIsCurrentAddress] = useState(false)
 
@@ -120,8 +122,12 @@ const User = ({ match }) => {
     }
   }
 
-  useEffect(() => {
+  const fetchUserProfile = () => {
     dispatch(userActions.getProfile({ userId: match.params.id }))
+  }
+
+  useEffect(() => {
+    fetchUserProfile()
   }, [dispatch])
 
   const getAddressName = (item) => {
@@ -133,20 +139,39 @@ const User = ({ match }) => {
     return 'Địa chỉ liên lạc:'
   }
 
+  const generateAddress = () => {
+    if (!selectedAddress) return ''
+    let address = ''
+    if (selectedAddress.quarter) {
+      address += selectedAddress.quarter
+    }
+    if (fullAddress && fullAddress.length > 0) {
+      address +=
+        selectedAddress.quarter && selectedAddress.quarter.length > 0
+          ? ', ' + fullAddress
+          : fullAddress
+    }
+    if (selectedAddress.wardEntity && selectedAddress.wardEntity.name) {
+      address +=
+        fullAddress && fullAddress.length > 0
+          ? ', ' + selectedAddress.wardEntity.name
+          : selectedAddress.wardEntity.name
+    }
+    if (selectedAddress.district && selectedAddress.district.name) {
+      address += ', ' + selectedAddress.district.name
+    }
+    if (selectedAddress.provinceEntity && selectedAddress.provinceEntity.name) {
+      address += ', ' + selectedAddress.provinceEntity.name
+    }
+    return address
+  }
+
   const renderAddressList = (item, index) => {
     return (
       <div key={index} className="address-item">
         <div className="address-info">
           <div>{getAddressName(item)}</div>
-          <div>
-            <span>{item.quarter && item.quarter.length > 0 ? `${item.quarter}, ` : ''}</span>
-            <span>
-              {item.fullAddress && item.fullAddress.length > 0 ? `${item.fullAddress}, ` : ''}
-            </span>
-            <span>{item.wardEntity ? `${item.wardEntity.name}, ` : ''}</span>
-            <span>{item.district ? `${item.district.name}, ` : ''}</span>
-            <span>{item.provinceEntity ? `${item.provinceEntity.name}` : ''}</span>
-          </div>
+          <div>{item.display}</div>
         </div>
         <div className="address-action">
           <CButton
@@ -193,12 +218,21 @@ const User = ({ match }) => {
   }
 
   const handleUserAddressSubmit = (e) => {
-    if (!selectedAddress) return
+    const appUser = localStorage.getItem(APP_USER)
+      ? JSON.parse(localStorage.getItem(APP_USER))
+      : null
+    if (!selectedAddress || !appUser) return
     e.preventDefault()
     setEditAddress(!isEditAddress)
+    selectedAddress.display = generateAddress()
     selectedAddress.isCurrent = isCurrentAddress
     selectedAddress.isPermanent = isPermanentAddress
+    selectedAddress.user = {
+      id: appUser.userId,
+    }
+    selectedAddress.fullAddress = fullAddress
     dispatch(userActions.addOrUpdateUserAddress(selectedAddress))
+    fetchUserProfile()
   }
 
   /*
@@ -280,8 +314,9 @@ const User = ({ match }) => {
               <CFormControl
                 id="fullAddressInput"
                 placeholder="Nhập địa chỉ nhà"
-                value={selectedAddress ? selectedAddress.fullAddress : ''}
+                value={fullAddress}
                 disabled={selectedAddress === null}
+                onChange={(e) => setFullAddress(e.target.value)}
               />
             </CCol>
             <CCol sm="12" className="mb-4 pe-4">
