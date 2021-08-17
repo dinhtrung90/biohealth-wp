@@ -19,6 +19,7 @@ import {
   CModalTitle,
   CModalBody,
   CModalFooter,
+  CLink,
 } from '@coreui/react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'qrcode.react'
@@ -44,6 +45,7 @@ const User = ({ match }) => {
   const provinces = useSelector((state) => state.quarter.provinces)
   const districts = useSelector((state) => state.quarter.districts)
   const wards = useSelector((state) => state.quarter.wards)
+  const hotlinesByWard = useSelector((state) => state.quarter.hotlinesByWard)
   const today = new Date()
   const [vaccinatedDate, setVaccinatedDate] = useState()
   const [testDate, setTestDate] = useState()
@@ -127,7 +129,15 @@ const User = ({ match }) => {
   }
 
   useEffect(() => {
-    fetchUserProfile()
+    dispatch(userActions.getProfile({ userId: match.params.id })).then((result) => {
+      if (result.user && result.user.addresses && result.user.addresses.length > 0) {
+        let defaultAddress = result.user.addresses.filter((address) => address.isCurrent)[0]
+        if (!defaultAddress) {
+          defaultAddress = result.user.addresses[0]
+        }
+        dispatch(quarterActions.getHotLinesByWard(defaultAddress.wardEntity.id))
+      }
+    })
   }, [dispatch])
 
   const getAddressName = (item) => {
@@ -638,88 +648,43 @@ const User = ({ match }) => {
               <CRow>
                 <CCol sm={12} className="mb-1 pe-5">
                   <CFormLabel htmlFor="MobileNumber" className="col-form-label">
-                    SĐT Tổ trường:
+                    <span className="pe-2">SĐT Tổ trường:</span>
+                    <CLink className="hotline-link" href={`tel:${hotlinesByWard.mobileLeader}`}>
+                      {hotlinesByWard.mobileLeader}
+                    </CLink>
                   </CFormLabel>
-                  <CInputGroup>
-                    <CInputGroupText>
-                      <CIcon name="cil-phone" />
-                    </CInputGroupText>
-                    <CFormControl
-                      type="tel"
-                      id="MobileNumberQuarter"
-                      name="MobileNumberQuarter"
-                      placeholder="SĐT tổ trường"
-                      disabled={!formik.values.isAdmin}
-                    />
-                  </CInputGroup>
                 </CCol>
                 <CCol sm={12} className="mb-1 pe-5">
                   <CFormLabel htmlFor="MobileNumber" className="col-form-label">
-                    SĐT Phường:
+                    <span className="pe-2">SĐT Phường:</span>
+                    <CLink className="hotline-link" href={`tel:${hotlinesByWard.mobileLeader}`}>
+                      {hotlinesByWard.mobileLeader}
+                    </CLink>
                   </CFormLabel>
-                  <CInputGroup>
-                    <CInputGroupText>
-                      <CIcon name="cil-phone" />
-                    </CInputGroupText>
-                    <CFormControl
-                      type="tel"
-                      id="MobileNumberWard"
-                      name="MobileNumberWard"
-                      placeholder="SĐT Phường"
-                      disabled={!formik.values.isAdmin}
-                    />
-                  </CInputGroup>
                 </CCol>
                 <CCol sm={12} className="mb-1 pe-5">
                   <CFormLabel htmlFor="MobileNumber" className="col-form-label">
-                    SĐT Công An Phường:
+                    <span className="pe-2">SĐT Công An Phường:</span>
+                    <CLink className="hotline-link" href={`tel:${hotlinesByWard.mobileLeader}`}>
+                      {hotlinesByWard.mobileLeader}
+                    </CLink>
                   </CFormLabel>
-                  <CInputGroup>
-                    <CInputGroupText>
-                      <CIcon name="cil-phone" />
-                    </CInputGroupText>
-                    <CFormControl
-                      type="tel"
-                      id="MobileNumberWardPolice"
-                      name="MobileNumberWardPolice"
-                      placeholder="SĐT công an Phường"
-                      disabled={!formik.values.isAdmin}
-                    />
-                  </CInputGroup>
                 </CCol>
                 <CCol sm={12} className="mb-1 pe-5">
                   <CFormLabel htmlFor="MobileNumber" className="col-form-label">
-                    SĐT Y tế Phường:
+                    <span className="pe-2">SĐT Y tế Phường:</span>
+                    <CLink className="hotline-link" href={`tel:${hotlinesByWard.mobileLeader}`}>
+                      {hotlinesByWard.mobileLeader}
+                    </CLink>
                   </CFormLabel>
-                  <CInputGroup>
-                    <CInputGroupText>
-                      <CIcon name="cil-phone" />
-                    </CInputGroupText>
-                    <CFormControl
-                      type="tel"
-                      id="MobileNumberWardHealth"
-                      name="MobileNumberWardHealth"
-                      placeholder="SĐT Y tế Phường"
-                      disabled={!formik.values.isAdmin}
-                    />
-                  </CInputGroup>
                 </CCol>
                 <CCol sm={12} className="mb-1 pe-5">
                   <CFormLabel htmlFor="MobileNumber" className="col-form-label">
-                    SĐT Lực lượng phòng dịch Phường (Quận):
+                    <span className="pe-2">SĐT Lực lượng phòng dịch Phường (Quận):</span>
+                    <CLink className="hotline-link" href={`tel:${hotlinesByWard.mobileLeader}`}>
+                      {hotlinesByWard.mobileLeader}
+                    </CLink>
                   </CFormLabel>
-                  <CInputGroup>
-                    <CInputGroupText>
-                      <CIcon name="cil-phone" />
-                    </CInputGroupText>
-                    <CFormControl
-                      type="tel"
-                      id="MobileNumberWardHealth"
-                      name="MobileNumberWardHealth"
-                      placeholder="SĐT Lực lượng phòng dịch"
-                      disabled={!formik.values.isAdmin}
-                    />
-                  </CInputGroup>
                 </CCol>
               </CRow>
             </CCol>
