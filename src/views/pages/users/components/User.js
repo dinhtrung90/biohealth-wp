@@ -47,13 +47,15 @@ const User = ({ match }) => {
   const wards = useSelector((state) => state.quarter.wards)
   const hotlinesByWard = useSelector((state) => state.quarter.hotlinesByWard)
   const today = new Date()
-  const [vaccinatedDate, setVaccinatedDate] = useState()
-  const [testDate, setTestDate] = useState()
   const [isEditAddress, setEditAddress] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState(null)
   const [fullAddress, setFullAddress] = useState('')
   const [isPermanentAddress, setIsPermanentAddress] = useState(false)
   const [isCurrentAddress, setIsCurrentAddress] = useState(false)
+  const [vaccinatedDate, setVaccinatedDate] = useState()
+  const [testDate, setTestDate] = useState()
+  const [isChangQuestionVaccinated, setChangeQuestionVaccinated] = useState(true)
+  const [isChangeQuestionPCR, setChangeQuestionPCR] = useState(true)
   const [isQuestionVaccinated, setQuestionVaccinated] = useState(false)
   const [isQuestionPCR, setQuestionPCR] = useState(false)
 
@@ -150,6 +152,35 @@ const User = ({ match }) => {
     )
   }
 
+  const getQuestionResponse = (title, radioConfirmed, isPCR = false) => {
+    if (isPCR) {
+      if (!isChangeQuestionPCR) {
+        if (radioConfirmed === 'yes') {
+          return isQuestionPCR
+        } else {
+          return !isQuestionPCR && radioConfirmed === 'no'
+        }
+      }
+    } else if (!isChangQuestionVaccinated) {
+      if (radioConfirmed === 'yes') {
+        return isQuestionVaccinated
+      } else {
+        return !isQuestionVaccinated && radioConfirmed === 'no'
+      }
+    }
+
+    // first loading to check question responses
+    const hasQuestion = user && user.questionnaires && user.questionnaires.length > 0
+    if (!hasQuestion) return false
+    const question = user.questionnaires.find((q) => q.title === title)
+    if (!question) return false
+    if (radioConfirmed === 'yes') {
+      return question.response === 'true'
+    } else if (question.response === 'false') {
+      return true
+    }
+  }
+
   const handleRadioVaccinatedChange = (e, title, radioTypeYes, isPCR = false) => {
     const appUser = localStorage.getItem(APP_USER)
       ? JSON.parse(localStorage.getItem(APP_USER))
@@ -158,8 +189,10 @@ const User = ({ match }) => {
     const today = new Date()
     const response = e.target.id === radioTypeYes
     if (isPCR) {
+      setChangeQuestionPCR(false)
       setQuestionPCR(response)
     } else {
+      setChangeQuestionVaccinated(false)
       setQuestionVaccinated(response)
     }
     if (response) return
@@ -218,11 +251,20 @@ const User = ({ match }) => {
 
   useEffect(() => {
     dispatch(userActions.getProfile({ userId: match.params.id })).then((result) => {
-      if (result.user && result.user.addresses && result.user.addresses.length > 0) {
+      if (result && result.user && result.user.addresses && result.user.addresses.length > 0) {
         let defaultAddress = result.user.addresses.filter((address) => address.isCurrent)[0]
         if (!defaultAddress) {
           defaultAddress = result.user.addresses[0]
         }
+        result.user.questionnaires.forEach((q) => {
+          if (q.vaccineDate) {
+            setQuestionVaccinated(true)
+            setVaccinatedDate(new Date(q.vaccineDate))
+          } else if (q.testPCRDate) {
+            setQuestionPCR(true)
+            setTestDate(new Date(q.testPCRDate))
+          }
+        })
         dispatch(quarterActions.getHotLinesByWard(defaultAddress.wardEntity.id))
       }
     })
@@ -655,6 +697,7 @@ const User = ({ match }) => {
                       false,
                     )
                   }
+                  checked={getQuestionResponse(formik.values.questionVaccinated, 'yes')}
                 />
                 <CFormCheck
                   type="radio"
@@ -670,9 +713,17 @@ const User = ({ match }) => {
                       false,
                     )
                   }
+                  checked={getQuestionResponse(formik.values.questionVaccinated, 'no')}
                 />
               </div>
-              <CInputGroup style={{ display: isQuestionVaccinated ? 'flex' : 'none' }}>
+              <CInputGroup
+                style={{
+                  display:
+                    isQuestionVaccinated || (vaccinatedDate && vaccinatedDate.length > 0)
+                      ? 'flex'
+                      : 'none',
+                }}
+              >
                 <CInputGroupText>
                   <CIcon name="cil-calendar" />
                 </CInputGroupText>
@@ -706,6 +757,7 @@ const User = ({ match }) => {
                   onClick={(e) =>
                     handleRadioVaccinatedChange(e, formik.values.questionPCR, 'radioTestYes', true)
                   }
+                  checked={getQuestionResponse(formik.values.questionPCR, 'yes', true)}
                 />
                 <CFormCheck
                   type="radio"
@@ -716,6 +768,7 @@ const User = ({ match }) => {
                   onClick={(e) =>
                     handleRadioVaccinatedChange(e, formik.values.questionPCR, 'radioTestYes', true)
                   }
+                  checked={getQuestionResponse(formik.values.questionPCR, 'no', true)}
                 />
               </div>
               <CInputGroup style={{ display: isQuestionPCR ? 'flex' : 'none' }}>
