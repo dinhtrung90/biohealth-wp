@@ -125,10 +125,60 @@ function addOrUpdateUserAddress(data) {
   }
 }
 
+function createQuestion(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.questionnaireService
+      .createQuestion(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.CREATE_QUESTION_REQUEST }
+  }
+
+  function success(question) {
+    return { type: t.CREATE_QUESTION_SUCCESS, question }
+  }
+
+  function failure(error) {
+    return { type: t.CREATE_QUESTION_FAILURE, error }
+  }
+}
+
+function updateQuestion(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.questionnaireService
+      .updateQuestion(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.UPDATE_QUESTION_REQUEST }
+  }
+
+  function success(question) {
+    return { type: t.UPDATE_QUESTION_SUCCESS, question }
+  }
+
+  function failure(error) {
+    return { type: t.UPDATE_QUESTION_FAILURE, error }
+  }
+}
+
 export const userActions = {
   addOrUpdateUserAddress,
   getAccount,
   getAllUsers,
   getAllProfileUsers,
   getProfile,
+  createQuestion,
+  updateQuestion,
 }

@@ -9,6 +9,7 @@ const initialState = {
   users: [],
   totalPages: 0,
   itemsPerPage: 10,
+  questions: [],
 }
 
 const userReducer = (state = initialState, action) => {
@@ -92,6 +93,45 @@ const userReducer = (state = initialState, action) => {
         user: state.user,
       })
     case t.ADD_UPDATE_USER_ADDRESSES_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
+    case t.CREATE_QUESTION_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case t.CREATE_QUESTION_SUCCESS:
+      const questions = state.questions
+      const questionIndex = questions.findIndex((q) => q.title === state.question.title)
+      if (questionIndex === -1) {
+        questions.push(state.question)
+      }
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+        questions: questions,
+      })
+    case t.CREATE_QUESTION_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
+    case t.UPDATE_QUESTION_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case t.UPDATE_QUESTION_SUCCESS:
+      const questionList = state.questions
+      const foundIndex = questionList.findIndex((q) => q.title === state.question.title)
+      if (foundIndex !== -1) {
+        questionList[foundIndex] = state.question
+      }
+
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+        questions: questionList,
+      })
+    case t.UPDATE_QUESTION_FAILURE:
       return Object.assign({}, state, {
         errorFetch: action.error,
       })

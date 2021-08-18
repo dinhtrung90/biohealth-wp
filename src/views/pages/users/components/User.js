@@ -54,6 +54,8 @@ const User = ({ match }) => {
   const [fullAddress, setFullAddress] = useState('')
   const [isPermanentAddress, setIsPermanentAddress] = useState(false)
   const [isCurrentAddress, setIsCurrentAddress] = useState(false)
+  const [isQuestionVaccinated, setQuestionVaccinated] = useState(false)
+  const [isQuestionPCR, setQuestionPCR] = useState(false)
 
   const constGenders = {
     NONE: 'NONE',
@@ -104,23 +106,109 @@ const User = ({ match }) => {
       country: '',
       zipCode: '',
       qrCode: user && user.profile ? user.profile.userCode : '',
+      questionVaccinated: 'Bạn chích ngừa covid chưa?',
+      questionPCR: 'Lần test nhanh/PCR gần nhất?',
     },
     enableReinitialize: true,
   })
 
-  const handleRadioVaccinatedChange = (e) => {
-    if (e.target.id === 'radioVaccinatedYes') {
-      console.log('handleRadioVaccinatedChange Yes=', e)
+  const createQuestion = (data) => {
+    const payload = {
+      response: data.response,
+      title: data.title,
+      user: {
+        id: data.user.id,
+      },
+      vaccineDate: !data.isPCR && data.date ? data.date : null,
+      testPCRDate: data.isPCR && data.date ? data.date : null,
+    }
+    dispatch(userActions.createQuestion(payload)).then(() => {
+      fetchUserProfile()
+    })
+  }
+
+  const updateQuestion = (data) => {
+    const payload = {
+      id: data.id,
+      response: data.response,
+      title: data.title,
+      user: {
+        id: data.user.id,
+      },
+      vaccineDate: !data.isPCR && data.date ? data.date : null,
+      testPCRDate: data.isPCR && data.date ? data.date : null,
+    }
+    dispatch(userActions.updateQuestion(payload))
+  }
+
+  const hasQuestions = (title) => {
+    return (
+      user &&
+      user.questionnaires &&
+      user.questionnaires.length > 0 &&
+      user.questionnaires.findIndex((q) => q.title === title) > -1
+    )
+  }
+
+  const handleRadioVaccinatedChange = (e, title, radioTypeYes, isPCR = false) => {
+    const appUser = localStorage.getItem(APP_USER)
+      ? JSON.parse(localStorage.getItem(APP_USER))
+      : null
+    if (!appUser) return
+    const today = new Date()
+    const response = e.target.id === radioTypeYes
+    if (isPCR) {
+      setQuestionPCR(response)
     } else {
-      console.log('handleRadioVaccinatedChange No=', e)
+      setQuestionVaccinated(response)
+    }
+    if (response) return
+    if (hasQuestions(title)) {
+      const existQuestion = user.questionnaires.find((q) => q.title === title)
+      existQuestion.response = response
+      existQuestion.isPCR = isPCR
+      updateQuestion(existQuestion)
+    } else {
+      const payload = {
+        response: response,
+        title: title,
+        user: {
+          id: appUser.userId,
+        },
+        isPCR: isPCR,
+        date: response ? today.toISOString() : null,
+      }
+      createQuestion(payload)
     }
   }
 
-  const handleRadioTestChange = (e) => {
-    if (e.target.id === 'radioTestYes') {
-      console.log('handleRadioTestChange Yes=', e)
+  const onChangeVaccinatedDate = (title, date, response, isPCR = false) => {
+    if (isPCR) {
+      setTestDate(date)
     } else {
-      console.log('handleRadioTestChange No=', e)
+      setVaccinatedDate(date)
+    }
+    const appUser = localStorage.getItem(APP_USER)
+      ? JSON.parse(localStorage.getItem(APP_USER))
+      : null
+    if (!appUser) return
+    if (hasQuestions(title)) {
+      const existQuestion = user.questionnaires.find((q) => q.title === title)
+      existQuestion.response = response
+      existQuestion.isPCR = isPCR
+      existQuestion.date = date ? date.toISOString() : null
+      updateQuestion(existQuestion)
+    } else {
+      const payload = {
+        response: response,
+        title: title,
+        user: {
+          id: appUser.userId,
+        },
+        isPCR: isPCR,
+        date: date ? date.toISOString() : null,
+      }
+      createQuestion(payload)
     }
   }
 
@@ -552,15 +640,21 @@ const User = ({ match }) => {
               <hr />
             </CCol>
             <CCol sm="12 mb-4">
-              <div>Bạn chích ngừa covid chưa?</div>
+              <div>{formik.values.questionVaccinated}</div>
               <div className="flex-left">
                 <CFormCheck
                   type="radio"
                   name="radioVaccinated"
                   id="radioVaccinatedYes"
                   label={t('common.Yes')}
-                  defaultChecked
-                  onClick={(e) => handleRadioVaccinatedChange(e)}
+                  onClick={(e) =>
+                    handleRadioVaccinatedChange(
+                      e,
+                      formik.values.questionVaccinated,
+                      'radioVaccinatedYes',
+                      false,
+                    )
+                  }
                 />
                 <CFormCheck
                   type="radio"
@@ -568,16 +662,30 @@ const User = ({ match }) => {
                   id="radioVaccinatedNo"
                   label={t('common.No')}
                   className="ms-4"
-                  onClick={(e) => handleRadioVaccinatedChange(e)}
+                  onClick={(e) =>
+                    handleRadioVaccinatedChange(
+                      e,
+                      formik.values.questionVaccinated,
+                      'radioVaccinatedYes',
+                      false,
+                    )
+                  }
                 />
               </div>
-              <CInputGroup>
+              <CInputGroup style={{ display: isQuestionVaccinated ? 'flex' : 'none' }}>
                 <CInputGroupText>
                   <CIcon name="cil-calendar" />
                 </CInputGroupText>
                 <DatePicker
                   selected={vaccinatedDate}
-                  onChange={(date) => setVaccinatedDate(date)}
+                  onChange={(date) =>
+                    onChangeVaccinatedDate(
+                      formik.values.questionVaccinated,
+                      date,
+                      isQuestionVaccinated,
+                      false,
+                    )
+                  }
                   peekNextMonth
                   showMonthDropdown
                   showYearDropdown
@@ -588,15 +696,16 @@ const User = ({ match }) => {
               </CInputGroup>
             </CCol>
             <CCol sm="12">
-              <div>Lần test nhanh/PCR gần nhất</div>
+              <div>{formik.values.questionPCR}</div>
               <div className="flex-left">
                 <CFormCheck
                   type="radio"
                   name="radioTest"
                   id="radioTestYes"
                   label={t('common.Yes')}
-                  defaultChecked
-                  onClick={(e) => handleRadioTestChange(e)}
+                  onClick={(e) =>
+                    handleRadioVaccinatedChange(e, formik.values.questionPCR, 'radioTestYes', true)
+                  }
                 />
                 <CFormCheck
                   type="radio"
@@ -604,16 +713,20 @@ const User = ({ match }) => {
                   id="radioTestdNo"
                   label={t('common.No')}
                   className="ms-4"
-                  onClick={(e) => handleRadioTestChange(e)}
+                  onClick={(e) =>
+                    handleRadioVaccinatedChange(e, formik.values.questionPCR, 'radioTestYes', true)
+                  }
                 />
               </div>
-              <CInputGroup>
+              <CInputGroup style={{ display: isQuestionPCR ? 'flex' : 'none' }}>
                 <CInputGroupText>
                   <CIcon name="cil-calendar" />
                 </CInputGroupText>
                 <DatePicker
                   selected={testDate}
-                  onChange={(date) => setTestDate(date)}
+                  onChange={(date) =>
+                    onChangeVaccinatedDate(formik.values.questionPCR, date, isQuestionPCR, true)
+                  }
                   peekNextMonth
                   showMonthDropdown
                   showYearDropdown
