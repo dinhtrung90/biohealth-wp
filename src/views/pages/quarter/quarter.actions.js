@@ -137,6 +137,102 @@ function addUpdateHotLines(data) {
   }
 }
 
+function getAllGroups() {
+  return (dispatch) => {
+    dispatch(request())
+    return api.provinceService
+      .getAllGroups()
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.GROUPS_GET_ALL_REQUEST }
+  }
+
+  function success(groups) {
+    return { type: t.GROUPS_GET_ALL_SUCCESS, groups }
+  }
+
+  function failure(error) {
+    return { type: t.GROUPS_GET_ALL_FAILURE, error }
+  }
+}
+
+function createGroups(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.provinceService
+      .createGroups(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.CREATE_GROUP_ADDRESS_REQUEST }
+  }
+
+  function success(group) {
+    return { type: t.CREATE_GROUP_ADDRESS_SUCCESS, group }
+  }
+
+  function failure(error) {
+    return { type: t.CREATE_GROUP_ADDRESS_FAILURE, error }
+  }
+}
+
+function createGroupTree(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.provinceService
+      .createGroupTree(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.CREATE_GROUP_TREE_ADDRESS_REQUEST }
+  }
+
+  function success(group) {
+    return { type: t.CREATE_GROUP_TREE_ADDRESS_SUCCESS, group }
+  }
+
+  function failure(error) {
+    return { type: t.CREATE_GROUP_TREE_ADDRESS_FAILURE, error }
+  }
+}
+
+function getGroupByWardId(wardId) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.provinceService
+      .getGroupByWardId(wardId)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.GROUP_WARD_ID_GET_REQUEST }
+  }
+
+  function success(group) {
+    return { type: t.GROUP_WARD_ID_GET_SUCCESS, group }
+  }
+
+  function failure(error) {
+    return { type: t.GROUP_WARD_ID_GET_FAILURE, error }
+  }
+}
+
 export const quarterActions = {
   getAllProvinces,
   getAllDistrictsByProvince,
@@ -144,4 +240,8 @@ export const quarterActions = {
   updateQuarterTree,
   getHotLinesByWard,
   addUpdateHotLines,
+  getAllGroups,
+  createGroups,
+  createGroupTree,
+  getGroupByWardId,
 }

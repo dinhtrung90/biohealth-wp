@@ -43,8 +43,20 @@ const addUpdateHotlines = (data) => {
   return axios.post(BASE_URL + `/api/hotlines`, data)
 }
 
-const getAllGroups = (id) => {
-  return axios.get(BASE_URL + `/api/hotlines/${id}`)
+const getAllGroups = () => {
+  return axios.get(BASE_URL + '/api/groups')
+}
+
+const createGroups = (data) => {
+  return axios.post(BASE_URL + '/api/groups', data)
+}
+
+const createGroupTree = (data) => {
+  return axios.post(BASE_URL + '/api/groups/create-tree', data)
+}
+
+const getGroupByWardId = (wardId) => {
+  return axios.get(BASE_URL + `/api/groups/ward/${wardId}`)
 }
 
 export const provinceService = {
@@ -57,4 +69,8 @@ export const provinceService = {
   getHotlinesById,
   getHotlinesByWard,
   addUpdateHotlines,
+  getAllGroups,
+  createGroups,
+  createGroupTree,
+  getGroupByWardId,
 }
