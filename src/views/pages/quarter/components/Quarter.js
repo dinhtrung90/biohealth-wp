@@ -42,21 +42,29 @@ const Quarter = ({ props }) => {
   const wards = useSelector((state) => state.quarter.wards)
   const quarterTree = useSelector((state) => state.quarter.quarterTree)
   const [quarterInput, setQuarterInput] = useState('')
+  const [selectedWard, setSelectedWard] = useState({
+    province: null,
+    district: null,
+    ward: null,
+    groupTree: [],
+  })
 
   useEffect(() => {
     dispatch(quarterActions.getAllProvinces())
   }, [dispatch])
 
   const onProvinceChange = (option) => {
+    setSelectedWard({ ...selectedWard, province: option.id })
     dispatch(quarterActions.getAllDistrictsByProvince(option))
   }
 
   const onDistrictChange = (option) => {
+    setSelectedWard({ ...selectedWard, district: option.id })
     dispatch(quarterActions.getAllWardsByDistrict(option))
   }
 
   const onWardChange = (option) => {
-    console.log('onWardChange =', option)
+    setSelectedWard({ ...selectedWard, ward: option.id })
   }
 
   const _updateQuarterTree = (tree) => {
@@ -83,12 +91,25 @@ const Quarter = ({ props }) => {
 
   const onQuarterTreeChange = (treeData) => {
     dispatch(quarterActions.updateQuarterTree(treeData))
+    setSelectedWard({ ...selectedWard, groupTree: treeData })
   }
 
   const handleSubmit = (e) => {
-    const data = {
-      treeData: quarterTree,
+    console.log('handleSubmit selectedWard=', selectedWard)
+    const payload = {
+      children: selectedWard.groupTree,
+      name: 'k1',
+      ward: {
+        district: {
+          id: selectedWard.district,
+          province: {
+            id: selectedWard.province,
+          },
+        },
+        id: selectedWard.ward,
+      },
     }
+    dispatch(quarterActions.createGroupTree(payload))
   }
 
   const removeNode = (rowInfo) => {
@@ -172,10 +193,11 @@ const Quarter = ({ props }) => {
                   <CCol sm={12}>
                     quarterTree={JSON.stringify(quarterTree)}
                     {isFetchedQuarter > 0 ? (
-                      <div style={{ height: 400 }}>
+                      <div style={{ height: '100%' }}>
                         <SortableTree
                           treeData={quarterTree}
                           maxDepth={2}
+                          isVirtualized={false}
                           onChange={(treeData) => onQuarterTreeChange(treeData)}
                           generateNodeProps={(extendedNode, index) => ({
                             buttons: [
