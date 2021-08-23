@@ -81,7 +81,7 @@ const Login = (props) => {
         <CModalBody>
           <CRow>
             <CCol sm={12} className="flex-center mb-3">
-              <img src="/images/logo.png" height="60px" />
+              <img src="/images/logo_inactive.png" height="60px" />
             </CCol>
             <CCol sm={12} className="flex-center mb-4">
               <h4>Thiết lập lại mật khẩu</h4>

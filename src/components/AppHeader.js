@@ -71,13 +71,13 @@ const AppHeader = () => {
           <CHeaderNav className="d-none d-md-flex me-auto">
             <CNavItem>
               <CNavLink href="#" to="/dashboard" className="flex-center-items">
-                <FaHome className="me-1" />
+                <img src="/images/logo_active.png" height="30px" className="me-1" />
                 {t('common.DashboardPage')}
               </CNavLink>
             </CNavItem>
             <CNavItem>
               <CNavLink href="#/quarters" className="flex-center-items">
-                <FaUserFriends className="me-1" />
+                <FaUserFriends className="me-1" size="30px" />
                 {t('common.ManageQuarter')}
               </CNavLink>
             </CNavItem>
@@ -86,7 +86,7 @@ const AppHeader = () => {
                 className="flex-center-items custom-nav-item"
                 onClick={handleModalHotlineClick}
               >
-                <FaPhone className="me-1" />
+                <FaPhone className="me-1" size="30px" />
                 Quản lý Hotline
               </CNavLink>
             </CNavItem>
