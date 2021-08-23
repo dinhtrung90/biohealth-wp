@@ -2,6 +2,33 @@ import api from '../utils/api'
 import { accountConstants } from '../constants/constants'
 import { toast } from 'react-toastify'
 
+const registerAccount = (data) => {
+  return (dispatch) => {
+    dispatch(request())
+    return api.accountService
+      .registerAccount(data)
+      .then((response) => {
+        toast.success('Đăng ký thành công.')
+        dispatch(success(response))
+      })
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: accountConstants.REGISTER_ACCOUNT_REQUEST }
+  }
+
+  function success(response) {
+    return { type: accountConstants.REGISTER_ACCOUNT_SUCCESS, response }
+  }
+
+  function failure(error) {
+    return { type: accountConstants.REGISTER_ACCOUNT_FAILURE, error }
+  }
+}
+
 const updateChangePassword = (data) => {
   return (dispatch) => {
     dispatch(request())
@@ -30,5 +57,6 @@ const updateChangePassword = (data) => {
 }
 
 export const accountActions = {
+  registerAccount,
   updateChangePassword,
 }
