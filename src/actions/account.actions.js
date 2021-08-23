@@ -29,6 +29,35 @@ const registerAccount = (data) => {
   }
 }
 
+const resetPasswordInit = (data) => {
+  return (dispatch) => {
+    dispatch(request())
+    return api.accountService
+      .resetPasswordInit(data)
+      .then((response) => {
+        toast.success(
+          'Thiết lập mật khẩu thành công. Vui lòng đăng nhập email của bạn để xác nhận.',
+        )
+        dispatch(success(response))
+      })
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: accountConstants.RESET_PASSWORD_INIT_REQUEST }
+  }
+
+  function success(response) {
+    return { type: accountConstants.RESET_PASSWORD_INIT_SUCCESS, response }
+  }
+
+  function failure(error) {
+    return { type: accountConstants.RESET_PASSWORD_INIT_FAILURE, error }
+  }
+}
+
 const updateChangePassword = (data) => {
   return (dispatch) => {
     dispatch(request())
@@ -58,5 +87,6 @@ const updateChangePassword = (data) => {
 
 export const accountActions = {
   registerAccount,
+  resetPasswordInit,
   updateChangePassword,
 }

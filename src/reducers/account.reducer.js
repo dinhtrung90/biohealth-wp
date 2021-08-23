@@ -20,6 +20,19 @@ const accountReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         errorFetch: action.error,
       })
+    case accountConstants.RESET_PASSWORD_INIT_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case accountConstants.RESET_PASSWORD_INIT_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+      })
+    case accountConstants.RESET_PASSWORD_INIT_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
     case accountConstants.UPDATE_CHANGE_PASSWORD_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,

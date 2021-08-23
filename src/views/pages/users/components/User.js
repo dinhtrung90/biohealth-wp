@@ -389,7 +389,7 @@ const User = ({ match }) => {
     }
 
     return (
-      <CModal visible={isEditAddress} onClose={() => setEditAddress(!isEditAddress)}>
+      <CModal visible={isEditAddress} onDismiss={() => setEditAddress(!isEditAddress)}>
         <CModalHeader>
           <CModalTitle>Chỉnh sửa địa chỉ</CModalTitle>
         </CModalHeader>

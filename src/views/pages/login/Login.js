@@ -15,11 +15,14 @@ import {
   CInputGroupText,
   CRow,
   CFormFeedback,
+  CModal,
+  CModalBody,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginActions } from './action'
 import { userActions } from '../../pages/users/user.actions'
+import { accountActions } from '../../../actions/account.actions'
 import { useFormik } from 'formik'
 import { FaMobileAlt, FaLock, FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
 
@@ -29,6 +32,8 @@ const Login = (props) => {
   const history = useHistory()
   const isAuthenticated = useSelector((state) => state.login.isAuthenticated)
   const [isRevealPwd, setIsRevealPwd] = useState(false)
+  const [isForgotPassword, setIsForgotPassword] = useState(false)
+  const [forgetPasswordText, setForgetPasswordText] = useState('')
 
   const schema = Yup.object({
     username: Yup.string().required('Username is required'),
@@ -63,6 +68,45 @@ const Login = (props) => {
 
   const gotoRegister = () => {
     history.push('/register')
+  }
+
+  const handleToResetPassword = () => {
+    setIsForgotPassword(false)
+    dispatch(accountActions.resetPasswordInit(forgetPasswordText))
+  }
+
+  const modalForgetPassword = () => {
+    return (
+      <CModal visible={isForgotPassword} onDismiss={() => setIsForgotPassword(false)}>
+        <CModalBody>
+          <CRow>
+            <CCol sm={12} className="flex-center mb-3">
+              <img src="/images/logo.png" height="60px" />
+            </CCol>
+            <CCol sm={12} className="flex-center mb-4">
+              <h4>Thiết lập lại mật khẩu</h4>
+            </CCol>
+            <CCol sm={12} className="mb-4">
+              <CFormControl
+                id="forgotPassword"
+                name="forgotPassword"
+                placeholder="Tên đăng nhập hoặc email"
+                value={forgetPasswordText}
+                onChange={(e) => setForgetPasswordText(e.target.value)}
+              />
+            </CCol>
+            <CCol sm={12} className="flex-center">
+              <CButton
+                onClick={handleToResetPassword}
+                disabled={!forgetPasswordText || forgetPasswordText.length === 0}
+              >
+                Thiết lập lại mật khẩu
+              </CButton>
+            </CCol>
+          </CRow>
+        </CModalBody>
+      </CModal>
+    )
   }
 
   return (
@@ -149,7 +193,11 @@ const Login = (props) => {
                             </CButton>
                           </CCol>
                           <CCol xs="12" className="text-right flex-center">
-                            <CButton color="link" className="px-0">
+                            <CButton
+                              color="link"
+                              className="px-0"
+                              onClick={() => setIsForgotPassword(true)}
+                            >
                               {t('common.ForgotPassword')}?
                             </CButton>
                           </CCol>
@@ -178,6 +226,7 @@ const Login = (props) => {
             </CCol>
           </CRow>
         </CContainer>
+        {modalForgetPassword()}
       </div>
     </>
   )
