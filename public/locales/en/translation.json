@@ -57,7 +57,8 @@
     "UserPermission": "User Permission",
     "UserList": "Users",
     "ManageQuarter": "Quarters",
-    "QuarterList": "Quarters"
+    "QuarterList": "Quarters",
+    "Register": "Register"
   },
   "theHeader": {
     "Dashboard": "Dashboard",

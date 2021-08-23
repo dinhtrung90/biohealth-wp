@@ -56,7 +56,8 @@
     "UserPermission": "Phân quyền người dùng",
     "UserList": "Danh sách người dùng",
     "ManageQuarter": "Quản lý địa phương",
-    "QuarterList": "Danh sách địa phương"
+    "QuarterList": "Danh sách địa phương",
+    "Register": "Đăng ký"
   },
   "theHeader": {
     "Dashboard": "Trang chủ",

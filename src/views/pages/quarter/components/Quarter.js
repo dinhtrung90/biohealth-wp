@@ -96,19 +96,21 @@ const Quarter = ({ props }) => {
 
   const handleSubmit = (e) => {
     console.log('handleSubmit selectedWard=', selectedWard)
-    const payload = {
-      children: selectedWard.groupTree,
-      name: 'k1',
-      ward: {
-        district: {
-          id: selectedWard.district,
-          province: {
-            id: selectedWard.province,
+    const payload = [
+      {
+        children: selectedWard.groupTree,
+        name: 'k1',
+        ward: {
+          district: {
+            id: selectedWard.district,
+            province: {
+              id: selectedWard.province,
+            },
           },
+          id: selectedWard.ward,
         },
-        id: selectedWard.ward,
       },
-    }
+    ]
     dispatch(quarterActions.createGroupTree(payload))
   }
 
