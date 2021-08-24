@@ -9,6 +9,10 @@ const getProfileById = (data) => {
   return axios.get(BASE_URL + `/api/profile/${data.userId}`)
 }
 
+const updateProfile = (data) => {
+  return axios.post(BASE_URL + `/api/profile`, data)
+}
+
 const getAllUsers = (data) => {
   if (data && data.all) {
     return axios.get(BASE_URL + `/api/admin/users`)
@@ -33,4 +37,5 @@ export const userService = {
   getAllUsers,
   getProfileById,
   getAllProfileUsers,
+  updateProfile,
 }

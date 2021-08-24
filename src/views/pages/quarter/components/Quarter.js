@@ -65,6 +65,7 @@ const Quarter = ({ props }) => {
 
   const onWardChange = (option) => {
     setSelectedWard({ ...selectedWard, ward: option.id })
+    dispatch(quarterActions.getGroupByWardId(option.id))
   }
 
   const _updateQuarterTree = (tree) => {
@@ -75,7 +76,12 @@ const Quarter = ({ props }) => {
 
   const onQuarterKeyDown = (e) => {
     if (e.key === 'Enter' && e.target.value.length > 0) {
-      quarterTree.push({ title: e.target.value, uuid: uuid() })
+      quarterTree.push({
+        title: e.target.value,
+        uuid: uuid(),
+        name: e.target.value,
+        ward: { id: selectedWard.ward },
+      })
       _updateQuarterTree(quarterTree)
       e.target.value = ''
       setQuarterInput('')
@@ -84,7 +90,12 @@ const Quarter = ({ props }) => {
 
   const onAddQuarterClicked = () => {
     if (!quarterInput || quarterInput.length === 0) return
-    quarterTree.push({ title: quarterInput, uuid: uuid() })
+    quarterTree.push({
+      title: quarterInput,
+      uuid: uuid(),
+      name: quarterInput,
+      ward: { id: selectedWard.ward },
+    })
     _updateQuarterTree(quarterTree)
     setQuarterInput('')
   }
@@ -96,21 +107,7 @@ const Quarter = ({ props }) => {
 
   const handleSubmit = (e) => {
     console.log('handleSubmit selectedWard=', selectedWard)
-    const payload = [
-      {
-        children: selectedWard.groupTree,
-        name: 'k1',
-        ward: {
-          district: {
-            id: selectedWard.district,
-            province: {
-              id: selectedWard.province,
-            },
-          },
-          id: selectedWard.ward,
-        },
-      },
-    ]
+    const payload = selectedWard.groupTree
     dispatch(quarterActions.createGroupTree(payload))
   }
 

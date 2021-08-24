@@ -101,6 +101,30 @@ function getProfile(data) {
   }
 }
 
+function updateProfile(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.userService
+      .update(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.USER_GET_REQUEST }
+  }
+
+  function success(user) {
+    return { type: t.USER_GET_SUCCESS, user }
+  }
+
+  function failure(error) {
+    return { type: t.USER_GET_FAILURE, error }
+  }
+}
+
 function addOrUpdateUserAddress(data) {
   return (dispatch) => {
     dispatch(request())

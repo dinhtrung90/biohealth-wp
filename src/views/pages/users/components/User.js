@@ -375,6 +375,10 @@ const User = ({ match }) => {
     fetchUserProfile()
   }
 
+  const handleSaveProfile = () => {
+    console.log('handleSaveProfile')
+  }
+
   /*
    * Modal Address
    */
@@ -672,7 +676,7 @@ const User = ({ match }) => {
                 <hr />
               </CCol>
               <CCol sm="12" className="flex-center mt-3">
-                <CButton>{t('common.Save')}</CButton>
+                <CButton onClick={handleSaveProfile}>{t('common.Save')}</CButton>
               </CCol>
             </CRow>
           </CCol>
