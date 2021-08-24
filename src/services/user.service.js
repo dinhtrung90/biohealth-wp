@@ -9,8 +9,12 @@ const getProfileById = (data) => {
   return axios.get(BASE_URL + `/api/profile/${data.userId}`)
 }
 
-const updateProfile = (data) => {
+const updatePublicUserProfile = (data) => {
   return axios.post(BASE_URL + `/api/profile`, data)
+}
+
+const updateUserProfile = (data) => {
+  return axios.put(BASE_URL + `/api/user-profiles/${data.id}`, data)
 }
 
 const getAllUsers = (data) => {
@@ -37,5 +41,6 @@ export const userService = {
   getAllUsers,
   getProfileById,
   getAllProfileUsers,
-  updateProfile,
+  updatePublicUserProfile,
+  updateUserProfile,
 }

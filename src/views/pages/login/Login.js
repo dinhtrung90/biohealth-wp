@@ -114,6 +114,9 @@ const Login = (props) => {
       <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
         <CContainer>
           <CRow className="justify-content-center">
+            <CCol md="8" className="flex-center mb-4">
+              <img src="/images/logo_inactive.png" height="120px" />
+            </CCol>
             <CCol md="8">
               <CCardGroup>
                 <CCard className="p-4">
@@ -180,7 +183,6 @@ const Login = (props) => {
                             {formik.errors.password}
                           </CFormFeedback>
                         </CCol>
-
                         <CRow>
                           <CCol xs="6">
                             <CButton type="submit" color="primary" className="px-4">

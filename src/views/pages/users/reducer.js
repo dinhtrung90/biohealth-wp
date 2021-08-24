@@ -135,6 +135,19 @@ const userReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         errorFetch: action.error,
       })
+    case t.USER_PROFILE_UPDATE_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case t.USER_PROFILE_UPDATE_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+      })
+    case t.USER_PROFILE_UPDATE_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
     default:
       return state
   }

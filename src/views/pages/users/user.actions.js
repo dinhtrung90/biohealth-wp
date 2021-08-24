@@ -1,5 +1,6 @@
 import api from '../../../utils/api'
 import * as t from './constant'
+import { USER_PROFILE_PUBLIC_UPDATE_FAILURE } from './constant'
 
 function getAccount() {
   return (dispatch) => {
@@ -101,11 +102,11 @@ function getProfile(data) {
   }
 }
 
-function updateProfile(data) {
+function updatePublicUserProfile(data) {
   return (dispatch) => {
     dispatch(request())
     return api.userService
-      .update(data)
+      .updatePublicUserProfile(data)
       .then((response) => dispatch(success(response.data)))
       .catch((error) => {
         dispatch(failure(error))
@@ -113,15 +114,39 @@ function updateProfile(data) {
   }
 
   function request() {
-    return { type: t.USER_GET_REQUEST }
+    return { type: t.USER_PROFILE_PUBLIC_UPDATE_REQUEST }
   }
 
   function success(user) {
-    return { type: t.USER_GET_SUCCESS, user }
+    return { type: t.USER_PROFILE_PUBLIC_UPDATE_SUCCESS, user }
   }
 
   function failure(error) {
-    return { type: t.USER_GET_FAILURE, error }
+    return { type: t.USER_PROFILE_PUBLIC_UPDATE_FAILURE, error }
+  }
+}
+
+function updateUserProfile(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.userService
+      .updateUserProfile(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.USER_PROFILE_UPDATE_REQUEST }
+  }
+
+  function success(user) {
+    return { type: t.USER_PROFILE_UPDATE_SUCCESS, user }
+  }
+
+  function failure(error) {
+    return { type: t.USER_PROFILE_UPDATE_FAILURE, error }
   }
 }
 
@@ -205,4 +230,6 @@ export const userActions = {
   getProfile,
   createQuestion,
   updateQuestion,
+  updatePublicUserProfile,
+  updateUserProfile,
 }

@@ -376,7 +376,15 @@ const User = ({ match }) => {
   }
 
   const handleSaveProfile = () => {
-    console.log('handleSaveProfile')
+    const payload = {
+      birthDate: `${formik.values.yearBirth}-${formik.values.monthBirth}-${formik.values.dayBirth}`, // 'yyyy-MM-dd',
+      fullName: formik.values.fullName,
+      gender: formik.values.gender.toUpperCase(),
+      id: user && user.profile ? user.profile.id : 0,
+      mobilePhone: formik.values.mobilePhone,
+      ssn: formik.values.ssn,
+    }
+    console.log('handleSaveProfile payload=', payload)
   }
 
   /*
