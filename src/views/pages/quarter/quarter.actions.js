@@ -224,8 +224,8 @@ function getGroupByWardId(wardId) {
     return { type: t.GROUP_WARD_ID_GET_REQUEST }
   }
 
-  function success(group) {
-    return { type: t.GROUP_WARD_ID_GET_SUCCESS, group }
+  function success(items) {
+    return { type: t.GROUP_WARD_ID_GET_SUCCESS, items }
   }
 
   function failure(error) {

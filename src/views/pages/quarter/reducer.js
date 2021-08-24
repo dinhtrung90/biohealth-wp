@@ -124,6 +124,37 @@ const userReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         errorFetch: action.error,
       })
+    case t.GROUP_WARD_ID_GET_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        isFetchedQuarter: false,
+      })
+    case t.GROUP_WARD_ID_GET_SUCCESS:
+      const items = action.items
+      if (items && items.length > 0) {
+        items.forEach((i) => {
+          i.title = i.name
+          i.expanded = true
+          i.uuid = i.id
+          if (i.children && i.children.length > 0) {
+            i.children.forEach((child) => {
+              child.title = child.name
+              child.uuid = child.id
+              child.expanded = true
+            })
+          }
+        })
+      }
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+        isFetchedQuarter: true,
+        quarterTree: items,
+      })
+    case t.GROUP_WARD_ID_GET_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
     default:
       return state
   }
