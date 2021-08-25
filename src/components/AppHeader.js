@@ -103,7 +103,9 @@ const AppHeader = () => {
             {/*  <CNavLink href="#">Settings</CNavLink>*/}
             {/*</CNavItem>*/}
           </CHeaderNav>
-        ) : null}
+        ) : (
+          <CHeaderNav className="d-none d-md-flex me-auto"></CHeaderNav>
+        )}
         {/*<CHeaderNav>*/}
         {/*  <CNavItem>*/}
         {/*    <CNavLink href="#">*/}
