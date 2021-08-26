@@ -1,19 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  CButton,
-  CCard,
-  CCardBody,
-  CCol,
-  CContainer,
-  CForm,
-  CFormCheck,
-  CFormControl,
-  CFormLabel,
-  CInputGroup,
-  CInputGroupText,
-  CRow,
-  CFormSelect,
-} from '@coreui/react'
+import { CButton, CCard, CCardBody, CCol, CRow } from '@coreui/react'
 import { useTranslation } from 'react-i18next'
 import { FaPlus } from 'react-icons/fa'
 import CDataTable from '../../../components/widgets/table/CDataTable'
@@ -61,12 +47,12 @@ const ManageQuarters = ({ props }) => {
 
   const onRowClick = (item) => {
     console.log('onRowClick=', item)
-    history.push(`/quarter/${item.id}`)
+    history.push(`/quarter/${item.groupId}`)
   }
 
   const navigateToQuarter = (e) => {
     e.preventDefault()
-    history.push('/quarter')
+    history.push('/quarter/create')
   }
 
   return (

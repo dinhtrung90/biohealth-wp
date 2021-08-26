@@ -233,6 +233,30 @@ function getGroupByWardId(wardId) {
   }
 }
 
+function getGroupById(id) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.provinceService
+      .getGroupById(id)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.GROUP_ID_GET_REQUEST }
+  }
+
+  function success(item) {
+    return { type: t.GROUP_ID_GET_SUCCESS, item }
+  }
+
+  function failure(error) {
+    return { type: t.GROUP_ID_GET_FAILURE, error }
+  }
+}
+
 export const quarterActions = {
   getAllProvinces,
   getAllDistrictsByProvince,
@@ -244,4 +268,5 @@ export const quarterActions = {
   createGroups,
   createGroupTree,
   getGroupByWardId,
+  getGroupById,
 }

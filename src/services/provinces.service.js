@@ -59,6 +59,10 @@ const getGroupByWardId = (wardId) => {
   return axios.get(BASE_URL + `/api/groups/ward/${wardId}`)
 }
 
+const getGroupById = (groupId) => {
+  return axios.get(BASE_URL + `/api/groups/${groupId}`)
+}
+
 export const provinceService = {
   listProvinces,
   getProvince,
@@ -73,4 +77,5 @@ export const provinceService = {
   createGroups,
   createGroupTree,
   getGroupByWardId,
+  getGroupById,
 }

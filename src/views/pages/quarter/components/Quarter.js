@@ -5,14 +5,11 @@ import {
   CCardBody,
   CCol,
   CContainer,
-  CForm,
-  CFormCheck,
   CFormControl,
   CFormLabel,
   CInputGroup,
   CInputGroupText,
   CRow,
-  CFormSelect,
   CCardHeader,
 } from '@coreui/react'
 import { useTranslation } from 'react-i18next'
@@ -22,25 +19,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
 import { quarterActions } from '../quarter.actions'
-import SortableTree, {
-  addNodeUnderParent,
-  getFlatDataFromTree,
-  toggleExpandedForAll,
-  removeNodeAtPath,
-} from 'react-sortable-tree'
+import SortableTree, { toggleExpandedForAll, removeNodeAtPath } from 'react-sortable-tree'
 import 'react-sortable-tree/style.css' // This only needs to be imported once in your app
 import uuid from 'react-uuid'
 
-const Quarter = ({ props }) => {
+const Quarter = ({ match }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const dispatch = useDispatch()
   const animatedComponents = makeAnimated()
+  const groupId = match.params.id
   const isFetchedQuarter = useSelector((state) => state.quarter.isFetchedQuarter)
   const provinces = useSelector((state) => state.quarter.provinces)
   const districts = useSelector((state) => state.quarter.districts)
   const wards = useSelector((state) => state.quarter.wards)
   const quarterTree = useSelector((state) => state.quarter.quarterTree)
+  const group = useSelector((state) => state.quarter.group)
   const [quarterInput, setQuarterInput] = useState('')
   const [selectedWard, setSelectedWard] = useState({
     province: null,
@@ -51,6 +45,9 @@ const Quarter = ({ props }) => {
 
   useEffect(() => {
     dispatch(quarterActions.getAllProvinces())
+    if (groupId) {
+      dispatch(quarterActions.getGroupById(groupId))
+    }
   }, [dispatch])
 
   const onProvinceChange = (option) => {
