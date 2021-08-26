@@ -26,10 +26,10 @@ const ManageQuarters = ({ props }) => {
   const { t } = useTranslation()
   const history = useHistory()
   const dispatch = useDispatch()
-  const isFetching = useSelector((state) => state.users.isFetching)
-  const usersData = useSelector((state) => state.users.users)
-  const itemsPerPage = useSelector((state) => state.users.itemsPerPage)
-  const totalPages = useSelector((state) => state.users.totalPages)
+  const isFetching = useSelector((state) => state.quarter.isFetching)
+  const groupsData = useSelector((state) => state.quarter.allGroups)
+  const itemsPerPage = useSelector((state) => state.quarter.itemsPerPage)
+  const totalPages = useSelector((state) => state.quarter.totalPages)
   const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
   const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
   const [page, setPage] = useState(currentPage)
@@ -39,28 +39,29 @@ const ManageQuarters = ({ props }) => {
   }
 
   const onPaginationChange = (numberItemsPerPage) => {
-    // dispatch(quarterActions.getAllUsers({ page: 0, size: numberItemsPerPage }))
+    dispatch(quarterActions.getAllGroups({ page: 0, size: numberItemsPerPage }))
   }
 
-  const getAllUsers = async () => {
-    // dispatch(
-    //   quarterActions.getAllUsers({ page: currentPage > 1 ? currentPage - 1 : 0, size: itemsPerPage }),
-    // )
+  const getAllGroups = async () => {
+    dispatch(
+      quarterActions.getAllGroups({
+        page: currentPage > 1 ? currentPage - 1 : 0,
+        size: itemsPerPage,
+      }),
+    )
     setPage(currentPage)
   }
 
   useEffect(() => {
     const loadData = async () => {
-      await getAllUsers()
+      await getAllGroups()
     }
     loadData()
   }, [dispatch, currentPage, page])
 
   const onRowClick = (item) => {
     console.log('onRowClick=', item)
-    // dispatch(userActions.getPublicEligibilityDetail(item)).then((r) => {
-    //   setRewardPopup(!rewardPopup)
-    // })
+    history.push(`/quarter/${item.id}`)
   }
 
   const navigateToQuarter = (e) => {
@@ -83,10 +84,9 @@ const ManageQuarters = ({ props }) => {
               <CCardBody className="p-4">
                 <CDataTable
                   loading={isFetching}
-                  items={usersData}
+                  items={groupsData}
                   fields={[
-                    { key: 'quarter', label: 'Tổ' },
-                    { key: 'group', label: 'Khu phố' },
+                    { key: 'groupName', label: 'Tổ' },
                     { key: 'ward', label: 'Phường' },
                     { key: 'district', label: 'Quận' },
                     { key: 'province', label: 'Tỉnh' },

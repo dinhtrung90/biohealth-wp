@@ -28,7 +28,7 @@ const Register = () => {
   const history = useHistory()
 
   const schema = Yup.object({
-    // username: Yup.string().required('Nhập tên đăng nhập'),
+    username: Yup.string().required('Nhập tên đăng nhập'),
     firstName: Yup.string().required('Nhập tên'),
     lastName: Yup.string().required('Nhập họ'),
     email: Yup.string().required('Nhập email').email('Email không hợp lệ'),
@@ -56,7 +56,7 @@ const Register = () => {
     console.log('handleToSubmitAccount=', values)
     const payload = {
       email: values.email,
-      login: values.email,
+      login: values.username,
       firstName: values.firstName,
       lastName: values.lastName,
       password: values.password,
@@ -143,6 +143,28 @@ const Register = () => {
                     {/*    {formik.errors.username}*/}
                     {/*  </CFormFeedback>*/}
                     {/*</CCol>*/}
+                    <CCol sm={12} className="mb-4">
+                      <CInputGroup>
+                        <CInputGroupText>
+                          <CIcon name="cil-user" />
+                        </CInputGroupText>
+                        <CFormControl
+                          autoComplete="off"
+                          placeholder="Tên đăng nhập hoặc số điện thoại"
+                          value={formik.values.username}
+                          {...formik.getFieldProps('username')}
+                        />
+                      </CInputGroup>
+                      <CFormFeedback
+                        invalid
+                        style={{
+                          display:
+                            formik.errors.username && formik.touched.username ? 'block' : 'none',
+                        }}
+                      >
+                        {formik.errors.username}
+                      </CFormFeedback>
+                    </CCol>
                     <CCol sm={12} className="mb-4">
                       <CInputGroup>
                         <CInputGroupText>@</CInputGroupText>

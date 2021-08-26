@@ -222,6 +222,30 @@ function updateQuestion(data) {
   }
 }
 
+function updateUserAdmin(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.authService
+      .updateUserAdmin(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.USER_ADMIN_UPDATE_REQUEST }
+  }
+
+  function success(user) {
+    return { type: t.USER_ADMIN_UPDATE_SUCCESS, user }
+  }
+
+  function failure(error) {
+    return { type: t.USER_ADMIN_UPDATE_FAILURE, error }
+  }
+}
+
 export const userActions = {
   addOrUpdateUserAddress,
   getAccount,
@@ -232,4 +256,5 @@ export const userActions = {
   updateQuestion,
   updatePublicUserProfile,
   updateUserProfile,
+  updateUserAdmin,
 }

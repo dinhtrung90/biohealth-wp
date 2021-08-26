@@ -1,24 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import {
-  CButton,
-  CCard,
-  CCardBody,
-  CCol,
-  CContainer,
-  CForm,
-  CFormCheck,
-  CFormControl,
-  CFormLabel,
-  CInputGroup,
-  CInputGroupText,
-  CRow,
-  CFormSelect,
-} from '@coreui/react'
-import { AppHeader } from '../../../../components'
+import { CCard, CCardBody, CCol, CRow } from '@coreui/react'
 import { useTranslation } from 'react-i18next'
-import QRCode from 'qrcode.react'
-import { FaMobileAlt } from 'react-icons/fa'
-import { YearPicker, MonthPicker, DayPicker } from 'react-dropdown-date-forked'
 import CDataTable from '../../../components/widgets/table/CDataTable'
 import CPagination from '../../../components/widgets/pagination/CPagination'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -63,11 +45,7 @@ const ManageUsers = ({ props }) => {
   }, [dispatch, currentPage, page])
 
   const onRowClick = (item) => {
-    console.log('onRowClick=', item)
     history.push(`/profile/${item.user.id}`)
-    // dispatch(userActions.getPublicEligibilityDetail(item)).then((r) => {
-    //   setRewardPopup(!rewardPopup)
-    // })
   }
 
   return (

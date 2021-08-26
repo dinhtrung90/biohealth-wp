@@ -11,6 +11,7 @@ const initialState = {
   isFetchedQuarter: false,
   totalPages: 0,
   itemsPerPage: 10,
+  allGroups: [],
   hotlinesByWard: {
     districtHealthPhone: '',
     mobileLeader: '',
@@ -152,6 +153,20 @@ const userReducer = (state = initialState, action) => {
         quarterTree: items,
       })
     case t.GROUP_WARD_ID_GET_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
+    case t.GROUPS_GET_ALL_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case t.GROUPS_GET_ALL_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+        allGroups: action.groups,
+      })
+    case t.GROUPS_GET_ALL_FAILURE:
       return Object.assign({}, state, {
         errorFetch: action.error,
       })

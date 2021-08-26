@@ -35,6 +35,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import vi from 'date-fns/locale/vi'
 import Select from 'react-select'
 import { APP_USER } from '../../../../constants'
+import data from '@coreui/coreui/js/src/dom/data'
 
 registerLocale('vi', vi)
 
@@ -58,6 +59,7 @@ const User = ({ match }) => {
   const [isChangeQuestionPCR, setChangeQuestionPCR] = useState(true)
   const [isQuestionVaccinated, setQuestionVaccinated] = useState(false)
   const [isQuestionPCR, setQuestionPCR] = useState(false)
+  const appUser = localStorage.getItem(APP_USER) ? JSON.parse(localStorage.getItem(APP_USER)) : null
 
   const constGenders = {
     NONE: 'NONE',
@@ -83,9 +85,8 @@ const User = ({ match }) => {
     { title: 'Lần test nhanh/PCR gần nhất', response: '' },
   ]
 
-  const isAdmin = (obj) => {
-    const role = obj && obj.basicInfo ? obj.basicInfo.login.toUpperCase() : 'USER'
-    return role === loginRoles.ADMIN
+  const isAdmin = () => {
+    return appUser && appUser.authorities && appUser.authorities.indexOf('ROLE_ADMIN') > -1
   }
 
   const formik = useFormik({
@@ -100,7 +101,7 @@ const User = ({ match }) => {
         user && user.profile ? new Date(user.profile.birthDate).getMonth() : today.getMonth(),
       dayBirth: user && user.profile ? new Date(user.profile.birthDate).getDate() : today.getDate(),
       role: user && user.basicInfo ? user.basicInfo.login.toUpperCase() : 'USER',
-      isAdmin: isAdmin(user),
+      isAdmin: isAdmin(),
       addressList: user && user.addresses ? user.addresses : [],
       addressLine1: '',
       addressLine2: '',
@@ -182,9 +183,6 @@ const User = ({ match }) => {
   }
 
   const handleRadioVaccinatedChange = (e, title, radioTypeYes, isPCR = false) => {
-    const appUser = localStorage.getItem(APP_USER)
-      ? JSON.parse(localStorage.getItem(APP_USER))
-      : null
     if (!appUser) return
     const today = new Date()
     const response = e.target.id === radioTypeYes
@@ -216,15 +214,12 @@ const User = ({ match }) => {
   }
 
   const onChangeVaccinatedDate = (title, date, response, isPCR = false) => {
+    if (!appUser) return
     if (isPCR) {
       setTestDate(date)
     } else {
       setVaccinatedDate(date)
     }
-    const appUser = localStorage.getItem(APP_USER)
-      ? JSON.parse(localStorage.getItem(APP_USER))
-      : null
-    if (!appUser) return
     if (hasQuestions(title)) {
       const existQuestion = user.questionnaires.find((q) => q.title === title)
       existQuestion.response = response
@@ -358,9 +353,6 @@ const User = ({ match }) => {
   }
 
   const handleUserAddressSubmit = (e) => {
-    const appUser = localStorage.getItem(APP_USER)
-      ? JSON.parse(localStorage.getItem(APP_USER))
-      : null
     if (!selectedAddress || !appUser) return
     e.preventDefault()
     setEditAddress(!isEditAddress)
@@ -376,15 +368,34 @@ const User = ({ match }) => {
   }
 
   const handleSaveProfile = () => {
+    if (!appUser) return
     const payload = {
       birthDate: `${formik.values.yearBirth}-${formik.values.monthBirth}-${formik.values.dayBirth}`, // 'yyyy-MM-dd',
       fullName: formik.values.fullName,
       gender: formik.values.gender.toUpperCase(),
-      id: user && user.profile ? user.profile.id : 0,
       mobilePhone: formik.values.mobilePhone,
       ssn: formik.values.ssn,
+      user: {
+        id: appUser.userId,
+      },
     }
+    if (user && user.profile) {
+      payload.id = user.profile.id
+    }
+
     console.log('handleSaveProfile payload=', payload)
+    dispatch(userActions.updateUserProfile(payload))
+  }
+
+  const handleUpdateUserRole = (e) => {
+    const roles = [e.target.value]
+    const payload = {
+      authorities: roles,
+      id: appUser.userId,
+    }
+    appUser.authorities = roles
+    localStorage.setItem(APP_USER, JSON.stringify(appUser))
+    dispatch(userActions.updateUserAdmin(payload))
   }
 
   /*
@@ -804,19 +815,20 @@ const User = ({ match }) => {
             <CCol sm="12">
               <hr />
             </CCol>
-            {formik.values.isAdmin ? (
-              <CCol sm="12" style={{ paddingRight: '38px' }}>
-                <CFormLabel>
-                  <strong>{t('common.UserPermission')}</strong>
-                </CFormLabel>
-                <CFormSelect name="userRoles" id="userRoles">
-                  <option value={roles.ADMIN}>Quản trị viên</option>
-                  <option value={roles.SUPPORT_USER}>Hỗ trợ người dùng</option>
-                  <option value={roles.USER}>Người dùng</option>
-                </CFormSelect>
-              </CCol>
-            ) : null}
-            <CCol sm="12">
+            <CCol
+              sm="12"
+              style={{ paddingRight: '38px', display: formik.values.isAdmin ? 'block' : 'none' }}
+            >
+              <CFormLabel>
+                <strong>{t('common.UserPermission')}</strong>
+              </CFormLabel>
+              <CFormSelect name="userRoles" id="userRoles" onChange={handleUpdateUserRole}>
+                <option value={roles.ADMIN}>Quản trị viên</option>
+                <option value={roles.SUPPORT_USER}>Hỗ trợ người dùng</option>
+                <option value={roles.USER}>Người dùng</option>
+              </CFormSelect>
+            </CCol>
+            <CCol sm="12" style={{ display: formik.values.isAdmin ? 'block' : 'none' }}>
               <hr />
             </CCol>
             <CCol sm="12">

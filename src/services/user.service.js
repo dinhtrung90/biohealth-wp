@@ -14,7 +14,10 @@ const updatePublicUserProfile = (data) => {
 }
 
 const updateUserProfile = (data) => {
-  return axios.put(BASE_URL + `/api/user-profiles/${data.id}`, data)
+  if (data && data.id) {
+    return axios.put(BASE_URL + `/api/user-profiles/${data.id}`, data)
+  }
+  return axios.post(BASE_URL + `/api/user-profiles`, data)
 }
 
 const getAllUsers = (data) => {

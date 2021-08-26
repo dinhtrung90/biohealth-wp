@@ -56,7 +56,7 @@ const userReducer = (state = initialState, action) => {
       })
     case t.USER_PROFILE_GET_ALL_SUCCESS:
       const logginedUserId = JSON.parse(localStorage.getItem(APP_USER)).userId
-      const users = action.response.data.filter((u) => u.user.id !== logginedUserId)
+      const users = action.response.data.filter((u) => u.user && u.user.id !== logginedUserId)
       return Object.assign({}, state, {
         isFetching: false,
         isFetched: true,
@@ -148,6 +148,20 @@ const userReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         errorFetch: action.error,
       })
+    case t.USER_ADMIN_UPDATE_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case t.USER_ADMIN_UPDATE_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+      })
+    case t.USER_ADMIN_UPDATE_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
+
     default:
       return state
   }

@@ -65,7 +65,8 @@ const routes = [
   { path: '/profile/:id', name: 'User', component: User },
   { path: '/dashboard', name: 'Dashboard', component: ManageUsers },
   { path: '/quarters', name: 'ManageQuarters', component: ManageQuarters },
-  { path: '/quarter', name: 'User', component: Quarter },
+  { path: '/quarter', name: 'Quarter', component: Quarter },
+  { path: '/quarter/:id', name: 'Quarter', component: Quarter },
 
   // { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
