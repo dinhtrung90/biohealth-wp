@@ -84,7 +84,7 @@ const AppHeaderDropdown = () => {
 
   const modalChangePassword = () => {
     return (
-      <CModal visible={isChangePassword} onDismiss={() => setIsChangePassword(!isChangePassword)}>
+      <CModal visible={isChangePassword} onDismiss={() => setIsChangePassword(false)}>
         <CForm onSubmit={formik.handleSubmit}>
           <CModalHeader>
             <CModalTitle>Đổi mật khẩu</CModalTitle>
