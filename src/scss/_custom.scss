@@ -222,6 +222,10 @@
   }
 }
 
+.rst__moveHandle, .rst__loadingHandle {
+  z-index: 0!important;
+}
+
 @keyframes fadein {
   from {
     opacity:0;

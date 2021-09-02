@@ -46,22 +46,51 @@ const Quarter = ({ match }) => {
   useEffect(() => {
     dispatch(quarterActions.getAllProvinces())
     if (groupId) {
-      dispatch(quarterActions.getGroupById(groupId))
+      dispatch(quarterActions.getGroupById(groupId)).then((result) => {
+        if (result?.item?.ward) {
+          const district = {
+            id: result.item.ward.district.id,
+            label: result.item.ward.district.name,
+            name: result.item.ward.district.name,
+            value: result.item.ward.district.id,
+            province: result.item.ward.district.province,
+          }
+          const province = {
+            id: district.province.id,
+            label: district.province.name,
+            name: district.province.name,
+            value: district.province.id,
+          }
+          setSelectedWard({
+            ...selectedWard,
+            province: province,
+            district: district,
+            ward: {
+              id: result.item.ward.id,
+              label: result.item.ward.name,
+              name: result.item.ward.name,
+              value: result.item.ward.id,
+            },
+          })
+          console.log('selectedWard=', selectedWard)
+          dispatch(quarterActions.getGroupByWardId(result.item.ward.id))
+        }
+      })
     }
   }, [dispatch])
 
   const onProvinceChange = (option) => {
-    setSelectedWard({ ...selectedWard, province: option.id })
+    setSelectedWard({ ...selectedWard, province: option })
     dispatch(quarterActions.getAllDistrictsByProvince(option))
   }
 
   const onDistrictChange = (option) => {
-    setSelectedWard({ ...selectedWard, district: option.id })
+    setSelectedWard({ ...selectedWard, district: option })
     dispatch(quarterActions.getAllWardsByDistrict(option))
   }
 
   const onWardChange = (option) => {
-    setSelectedWard({ ...selectedWard, ward: option.id })
+    setSelectedWard({ ...selectedWard, ward: option })
     dispatch(quarterActions.getGroupByWardId(option.id))
   }
 
@@ -77,7 +106,7 @@ const Quarter = ({ match }) => {
         title: e.target.value,
         uuid: uuid(),
         name: e.target.value,
-        ward: { id: selectedWard.ward },
+        ward: { id: selectedWard.ward.id },
       })
       _updateQuarterTree(quarterTree)
       e.target.value = ''
@@ -91,7 +120,7 @@ const Quarter = ({ match }) => {
       title: quarterInput,
       uuid: uuid(),
       name: quarterInput,
-      ward: { id: selectedWard.ward },
+      ward: { id: selectedWard.ward.id },
     })
     _updateQuarterTree(quarterTree)
     setQuarterInput('')
@@ -140,6 +169,7 @@ const Quarter = ({ match }) => {
                       classNamePrefix="select"
                       components={animatedComponents}
                       onChange={onProvinceChange}
+                      value={selectedWard.province}
                     />
                   </CCol>
                   <CCol sm="12" className="mb-1">
@@ -153,6 +183,7 @@ const Quarter = ({ match }) => {
                       classNamePrefix="select"
                       components={animatedComponents}
                       onChange={onDistrictChange}
+                      value={selectedWard.district}
                     />
                   </CCol>
                   <CCol sm="12" className="mb-1">
@@ -166,6 +197,7 @@ const Quarter = ({ match }) => {
                       classNamePrefix="select"
                       components={animatedComponents}
                       onChange={onWardChange}
+                      value={selectedWard.ward}
                     />
                   </CCol>
                   <CCol sm="12" className="mb-1">
