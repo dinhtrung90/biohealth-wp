@@ -7,6 +7,19 @@ const initialState = {
 
 const accountReducer = (state = initialState, action) => {
   switch (action.type) {
+    case accountConstants.ACTIVE_ACCOUNT_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case accountConstants.ACTIVE_ACCOUNT_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+      })
+    case accountConstants.ACTIVE_ACCOUNT_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
     case accountConstants.REGISTER_ACCOUNT_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,

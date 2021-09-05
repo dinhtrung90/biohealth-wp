@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
 import { Link, useHistory } from 'react-router-dom'
@@ -129,6 +129,13 @@ const Login = (props) => {
       </CModal>
     )
   }
+
+  useEffect(() => {
+    if (props && props?.location?.search?.includes('activekey')) {
+      const activeKey = new URLSearchParams(props.location.search).get('activekey')
+      dispatch(accountActions.activateAccount(activeKey))
+    }
+  }, [dispatch])
 
   return (
     <>
