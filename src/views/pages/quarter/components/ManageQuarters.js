@@ -29,8 +29,12 @@ const ManageQuarters = ({ props }) => {
   }
 
   const getAllGroups = async () => {
+    const ward = localStorage.getItem('WARD')
+      ? JSON.parse(localStorage.getItem('WARD'))
+      : { id: 0, districtId: 0 }
     dispatch(
       quarterActions.getAllGroups({
+        ward: ward,
         page: currentPage > 1 ? currentPage - 1 : 0,
         size: itemsPerPage,
       }),

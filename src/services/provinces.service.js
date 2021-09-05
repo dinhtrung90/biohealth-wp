@@ -43,8 +43,13 @@ const addUpdateHotlines = (data) => {
   return axios.post(BASE_URL + `/api/hotlines`, data)
 }
 
-const getAllGroups = () => {
-  return axios.get(BASE_URL + '/api/groups')
+const getAllGroups = (data) => {
+  if (data && data.all) {
+    return axios.get(BASE_URL + '/api/groups')
+  }
+  return axios.get(
+    BASE_URL + `/api/groups?wardId.equals=${data.ward.id}&page=${data.page}&size=${data.size}`,
+  )
 }
 
 const createGroups = (data) => {

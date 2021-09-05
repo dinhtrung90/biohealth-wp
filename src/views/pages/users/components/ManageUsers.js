@@ -63,7 +63,7 @@ const ManageUsers = ({ props }) => {
                     { key: 'mobilePhone', label: 'Số điện thoại' },
                     { key: 'fullName', label: 'Họ và tên' },
                     { key: 'ssn', label: 'CMND/CCCD' },
-                    { key: 'fullAddress', label: 'Địa chỉ nhà' },
+                    // { key: 'fullAddress', label: 'Địa chỉ nhà' },
                   ]}
                   hover
                   tableFilter

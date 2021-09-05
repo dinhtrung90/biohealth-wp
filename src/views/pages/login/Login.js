@@ -54,11 +54,32 @@ const Login = (props) => {
     dispatch(loginActions.login(values)).then((result) => handleGetAccount(result))
   }
 
+  const getCurrentUserAddress = (addresses) => {
+    if (!addresses || addresses.length === 0) return
+    if (addresses?.length === 1) {
+      return addresses[0]
+    }
+    return addresses.filter((address) => address.isPermanent || address.isCurrent)[0]
+  }
+
   const handleGetAccount = (result) => {
     if (!result) return
     dispatch(userActions.getAccount()).then((result) => {
       if (!result || !result.account) return
       if (result.account.authorities.includes('ROLE_ADMIN')) {
+        dispatch(userActions.getProfile({ userId: result.account.id })).then((profileResult) => {
+          console.log('profileResult=', profileResult)
+          const addresses = profileResult ? profileResult.user.addresses : []
+          const currentAddress = getCurrentUserAddress(addresses)
+          if (currentAddress) {
+            const ward = {
+              id: currentAddress.wardEntity.id,
+              districtId: currentAddress.district.id,
+              provinceId: currentAddress.provinceEntity.id,
+            }
+            localStorage.setItem('WARD', JSON.stringify(ward))
+          }
+        })
         history.push('/dashboard')
       } else {
         history.push(`/profile/${result.account.id}`)

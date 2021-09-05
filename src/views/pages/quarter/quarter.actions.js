@@ -137,11 +137,11 @@ function addUpdateHotLines(data) {
   }
 }
 
-function getAllGroups() {
+function getAllGroups(data) {
   return (dispatch) => {
-    dispatch(request())
+    dispatch(request(data))
     return api.provinceService
-      .getAllGroups()
+      .getAllGroups(data)
       .then((response) => dispatch(success(response.data)))
       .catch((error) => {
         dispatch(failure(error))
