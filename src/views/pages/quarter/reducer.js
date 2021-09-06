@@ -165,7 +165,8 @@ const userReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         isFetching: false,
         isFetched: true,
-        allGroups: action.groups,
+        allGroups: action.response.data,
+        totalPages: Math.ceil(action.response.headers['x-total-count'] / state.itemsPerPage),
       })
     case t.GROUPS_GET_ALL_FAILURE:
       return Object.assign({}, state, {

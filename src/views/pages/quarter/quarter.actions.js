@@ -142,7 +142,7 @@ function getAllGroups(data) {
     dispatch(request(data))
     return api.provinceService
       .getAllGroups(data)
-      .then((response) => dispatch(success(response.data)))
+      .then((response) => dispatch(success(response)))
       .catch((error) => {
         dispatch(failure(error))
       })
@@ -152,8 +152,8 @@ function getAllGroups(data) {
     return { type: t.GROUPS_GET_ALL_REQUEST }
   }
 
-  function success(groups) {
-    return { type: t.GROUPS_GET_ALL_SUCCESS, groups }
+  function success(response) {
+    return { type: t.GROUPS_GET_ALL_SUCCESS, response }
   }
 
   function failure(error) {
