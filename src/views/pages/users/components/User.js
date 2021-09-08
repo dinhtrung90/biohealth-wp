@@ -49,6 +49,7 @@ const User = ({ match }) => {
   const hotlinesByWard = useSelector((state) => state.quarter.hotlinesByWard)
   const today = new Date()
   const [isEditAddress, setEditAddress] = useState(false)
+  const [isDeleteAddress, setDeleteAddress] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState(null)
   const [fullAddress, setFullAddress] = useState('')
   const [isPermanentAddress, setIsPermanentAddress] = useState(false)
@@ -59,6 +60,7 @@ const User = ({ match }) => {
   const [isChangeQuestionPCR, setChangeQuestionPCR] = useState(true)
   const [isQuestionVaccinated, setQuestionVaccinated] = useState(false)
   const [isQuestionPCR, setQuestionPCR] = useState(false)
+  const [userRole, setUserRole] = useState('')
   const appUser = localStorage.getItem(APP_USER) ? JSON.parse(localStorage.getItem(APP_USER)) : null
 
   const constGenders = {
@@ -244,23 +246,41 @@ const User = ({ match }) => {
     dispatch(userActions.getProfile({ userId: match.params.id }))
   }
 
+  const getCurrentRole = (authorities) => {
+    let role = null
+    if (!authorities || authorities.length === 0) return role
+    if (authorities.length === 1) {
+      role = authorities[0]
+    } else if (authorities.includes(roles.ADMIN)) {
+      role = roles.ADMIN
+    } else if (authorities.includes(roles.SUPPORT_USER)) {
+      role = roles.SUPPORT_USER
+    } else {
+      role = roles.USER
+    }
+    return role
+  }
+
   useEffect(() => {
     dispatch(userActions.getProfile({ userId: match.params.id })).then((result) => {
-      if (result && result.user && result.user.addresses && result.user.addresses.length > 0) {
-        let defaultAddress = result.user.addresses.filter((address) => address.isCurrent)[0]
-        if (!defaultAddress) {
-          defaultAddress = result.user.addresses[0]
-        }
-        result.user.questionnaires.forEach((q) => {
-          if (q.vaccineDate) {
-            setQuestionVaccinated(true)
-            setVaccinatedDate(new Date(q.vaccineDate))
-          } else if (q.testPCRDate) {
-            setQuestionPCR(true)
-            setTestDate(new Date(q.testPCRDate))
+      if (result && result.user) {
+        setUserRole(getCurrentRole(result.user.authorities))
+        if (result.user.addresses && result.user.addresses.length > 0) {
+          let defaultAddress = result.user.addresses.filter((address) => address.isCurrent)[0]
+          if (!defaultAddress) {
+            defaultAddress = result.user.addresses[0]
           }
-        })
-        dispatch(quarterActions.getHotLinesByWard(defaultAddress.wardEntity.id))
+          result.user.questionnaires.forEach((q) => {
+            if (q.vaccineDate) {
+              setQuestionVaccinated(true)
+              setVaccinatedDate(new Date(q.vaccineDate))
+            } else if (q.testPCRDate) {
+              setQuestionPCR(true)
+              setTestDate(new Date(q.testPCRDate))
+            }
+          })
+          dispatch(quarterActions.getHotLinesByWard(defaultAddress.wardEntity.id))
+        }
       }
     })
   }, [dispatch])
@@ -301,6 +321,13 @@ const User = ({ match }) => {
     return address
   }
 
+  const handleDeleteAddress = (item) => {
+    setDeleteAddress(false)
+    dispatch(userActions.deleteUserAddress(item.id)).then(() => {
+      fetchUserProfile()
+    })
+  }
+
   const renderAddressList = (item, index) => {
     return (
       <div key={index} className="address-item">
@@ -317,9 +344,23 @@ const User = ({ match }) => {
               setIsCurrentAddress(item.isCurrent)
             }}
           >
-            Edit
+            Sửa
+          </CButton>
+          <CButton color="danger" className="ms-2" onClick={() => setDeleteAddress(true)}>
+            Xoá
           </CButton>
         </div>
+        <CModal visible={isDeleteAddress} onDismiss={() => setDeleteAddress(false)}>
+          <CModalBody>Bạn có thật sự muốn xóa?</CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setDeleteAddress(false)}>
+              Huỷ
+            </CButton>
+            <CButton color="danger" onClick={() => handleDeleteAddress(item)}>
+              Xoá
+            </CButton>
+          </CModalFooter>
+        </CModal>
       </div>
     )
   }
@@ -383,7 +424,6 @@ const User = ({ match }) => {
       payload.id = user.profile.id
     }
 
-    console.log('handleSaveProfile payload=', payload)
     dispatch(userActions.updateUserProfile(payload))
   }
 
@@ -822,7 +862,12 @@ const User = ({ match }) => {
               <CFormLabel>
                 <strong>{t('common.UserPermission')}</strong>
               </CFormLabel>
-              <CFormSelect name="userRoles" id="userRoles" onChange={handleUpdateUserRole}>
+              <CFormSelect
+                name="userRoles"
+                id="userRoles"
+                onChange={handleUpdateUserRole}
+                value={userRole}
+              >
                 <option value={roles.ADMIN}>Quản trị viên</option>
                 <option value={roles.SUPPORT_USER}>Hỗ trợ người dùng</option>
                 <option value={roles.USER}>Người dùng</option>

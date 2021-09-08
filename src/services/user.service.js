@@ -38,8 +38,13 @@ const addOrUpdateUserAddresses = (data) => {
   return axios.post(BASE_URL + `/api/user-addresses`, data)
 }
 
+const deleteUserAddresses = (addressId) => {
+  return axios.delete(BASE_URL + `/api/user-addresses/${addressId}`)
+}
+
 export const userService = {
   addOrUpdateUserAddresses,
+  deleteUserAddresses,
   getAccount,
   getAllUsers,
   getProfileById,

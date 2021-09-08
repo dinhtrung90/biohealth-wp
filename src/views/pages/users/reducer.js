@@ -96,6 +96,20 @@ const userReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         errorFetch: action.error,
       })
+    case t.DELETE_USER_ADDRESSES_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      })
+    case t.DELETE_USER_ADDRESSES_SUCCESS:
+      state.user.addresses = action.userAddress
+      return Object.assign({}, state, {
+        isFetching: false,
+        isFetched: true,
+      })
+    case t.DELETE_USER_ADDRESSES_FAILURE:
+      return Object.assign({}, state, {
+        errorFetch: action.error,
+      })
     case t.CREATE_QUESTION_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,

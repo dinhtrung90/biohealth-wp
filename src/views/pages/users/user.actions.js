@@ -174,6 +174,30 @@ function addOrUpdateUserAddress(data) {
   }
 }
 
+function deleteUserAddress(data) {
+  return (dispatch) => {
+    dispatch(request())
+    return api.userService
+      .deleteUserAddresses(data)
+      .then((response) => dispatch(success(response.data)))
+      .catch((error) => {
+        dispatch(failure(error))
+      })
+  }
+
+  function request() {
+    return { type: t.DELETE_USER_ADDRESSES_REQUEST }
+  }
+
+  function success() {
+    return { type: t.DELETE_USER_ADDRESSES_SUCCESS }
+  }
+
+  function failure(error) {
+    return { type: t.DELETE_USER_ADDRESSES_FAILURE, error }
+  }
+}
+
 function createQuestion(data) {
   return (dispatch) => {
     dispatch(request())
@@ -248,6 +272,7 @@ function updateUserAdmin(data) {
 
 export const userActions = {
   addOrUpdateUserAddress,
+  deleteUserAddress,
   getAccount,
   getAllUsers,
   getAllProfileUsers,
