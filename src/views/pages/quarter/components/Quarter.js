@@ -72,7 +72,6 @@ const Quarter = ({ match }) => {
               value: result.item.ward.id,
             },
           })
-          console.log('selectedWard=', selectedWard)
           dispatch(quarterActions.getGroupByWardId(result.item.ward.id))
         }
       })
@@ -132,7 +131,6 @@ const Quarter = ({ match }) => {
   }
 
   const handleSubmit = (e) => {
-    console.log('handleSubmit selectedWard=', selectedWard)
     const payload = selectedWard.groupTree
     dispatch(quarterActions.createGroupTree(payload))
   }
@@ -145,7 +143,6 @@ const Quarter = ({ match }) => {
       getNodeKey: ({ treeIndex }) => treeIndex,
       ignoreCollapsed: false,
     })
-    console.log('removeNode _newTreeData=', _newTreeData)
     _updateQuarterTree(_newTreeData)
   }
 

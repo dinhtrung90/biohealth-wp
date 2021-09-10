@@ -429,12 +429,13 @@ const User = ({ match }) => {
 
   const handleUpdateUserRole = (e) => {
     const roles = [e.target.value]
+    const profile = user.profile
     const payload = {
       authorities: roles,
-      id: appUser.userId,
+      id: profile.user.id,
+      login: profile.user.login,
     }
     appUser.authorities = roles
-    localStorage.setItem(APP_USER, JSON.stringify(appUser))
     dispatch(userActions.updateUserAdmin(payload))
   }
 
@@ -734,7 +735,7 @@ const User = ({ match }) => {
               <CCol sm="12">
                 <hr />
               </CCol>
-              <CCol sm="12" className="flex-center mt-3">
+              <CCol sm="12" className="flex-center mt-3 mb-4">
                 <CButton onClick={handleSaveProfile}>{t('common.Save')}</CButton>
               </CCol>
             </CRow>
@@ -869,7 +870,7 @@ const User = ({ match }) => {
                 value={userRole}
               >
                 <option value={roles.ADMIN}>Quản trị viên</option>
-                <option value={roles.SUPPORT_USER}>Hỗ trợ người dùng</option>
+                {/*<option value={roles.SUPPORT_USER}>Hỗ trợ người dùng</option>*/}
                 <option value={roles.USER}>Người dùng</option>
               </CFormSelect>
             </CCol>

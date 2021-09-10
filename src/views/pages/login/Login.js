@@ -68,7 +68,6 @@ const Login = (props) => {
       if (!result || !result.account) return
       if (result.account.authorities.includes('ROLE_ADMIN')) {
         dispatch(userActions.getProfile({ userId: result.account.id })).then((profileResult) => {
-          console.log('profileResult=', profileResult)
           const addresses = profileResult ? profileResult.user.addresses : []
           const currentAddress = getCurrentUserAddress(addresses)
           if (currentAddress) {

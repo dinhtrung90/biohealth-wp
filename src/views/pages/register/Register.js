@@ -53,7 +53,6 @@ const Register = () => {
   })
 
   const handleToSubmitAccount = (values) => {
-    console.log('handleToSubmitAccount=', values)
     const payload = {
       email: values.email,
       login: values.username,

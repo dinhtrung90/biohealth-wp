@@ -50,7 +50,6 @@ const ManageQuarters = ({ props }) => {
   }, [dispatch, currentPage, page])
 
   const onRowClick = (item) => {
-    console.log('onRowClick=', item)
     history.push(`/quarter/${item.groupId}`)
   }
 
